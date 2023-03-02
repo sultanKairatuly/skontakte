@@ -48,6 +48,7 @@ function updateModel(e: Event) {
   border-radius: 10px;
   border: none;
   font-size: 18px;
+  width: 100%;
   outline: none;
   border: 1px solid #dadbdd;
   display: block;

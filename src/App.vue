@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
+  <div class="app">
     <SkHeader />
     <div class="app_layout">
-      <SkSidebar />
+      <SkSidebar v-if="localStorage.getItem('user')" />
       <router-view></router-view>
     </div>
   </div>
@@ -11,6 +11,8 @@
 <script setup lang="ts">
 import SkHeader from "./components/SkHeader.vue";
 import SkSidebar from "./components/SkSidebar.vue";
+
+const localStorage = window.localStorage;
 </script>
 
 <style>
@@ -21,7 +23,9 @@ import SkSidebar from "./components/SkSidebar.vue";
   box-sizing: border-box;
 }
 
-#app {
+.app {
+  position: relative;
+
   background-color: #edeef0;
 }
 

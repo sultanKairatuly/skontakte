@@ -83,6 +83,7 @@ function handleListItemClicked(list: profileListItem): void {
   border-bottom: 1px solid #dce1e6;
   position: fixed;
   width: 100%;
+  padding: 15px 0;
 }
 
 .dropdown_menu {

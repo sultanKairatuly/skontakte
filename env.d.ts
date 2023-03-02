@@ -1,3 +1,5 @@
+import type { Component } from 'vue'
+
 export type UserDB = {
     name: string,
     email: string,
@@ -14,7 +16,7 @@ export type profileListItem = {
 };
 
 export type sidebarItem = Omit<profileListItem, 'action'> & { route: string }
-
+export type entriesNavItem = Omit<profileListItem, 'action'> & { component: Component }
 
 export type User = {
     name: string,

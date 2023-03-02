@@ -53,9 +53,7 @@ import SkInput from "../UIcomponents/SkInput.vue";
 import { ref } from "vue";
 import { useAuthStore } from "../stores/auth";
 import type { User } from "env";
-import { useImageGetter } from "@/composables/utilities";
 
-const { getImageUrl } = useImageGetter();
 const isPwt = ref(false);
 const store = useAuthStore();
 const name = ref<string>("");

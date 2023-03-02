@@ -10,11 +10,19 @@ import { collection, addDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import type {User, UserDB } from '../../env.d'
 import router from '@/router';
+import {
+  getDocs,
+  doc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
+
 
 export const useAuthStore = defineStore('auth', {
   state: () => {
     return {
       user: JSON.parse(localStorage.getItem("user") as string) || {},
+      loading: false
     }
   },
   getters: {
@@ -30,6 +38,7 @@ export const useAuthStore = defineStore('auth', {
           email,
           password
         );
+        console.log(userCredentilas.user)
         await updateProfile(userCredentilas.user, {
           displayName: name,
           photoURL: photoURL || 'https://images.are.na/eyJidWNrZXQiOiJhcmVuYV9pbWFnZXMiLCJrZXkiOiI4MDQwOTc0L29yaWdpbmFsX2ZmNGYxZjQzZDdiNzJjYzMxZDJlYjViMDgyN2ZmMWFjLnBuZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6MTIwMCwiaGVpZ2h0IjoxMjAwLCJmaXQiOiJpbnNpZGUiLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9LCJ3ZWJwIjp7InF1YWxpdHkiOjkwfSwianBlZyI6eyJxdWFsaXR5Ijo5MH0sInJvdGF0ZSI6bnVsbH19?bc=0',
@@ -39,10 +48,17 @@ export const useAuthStore = defineStore('auth', {
         await addDoc(collection(db, "users"), {
           name: this.user.displayName,
           email: this.user.email,
-          comments: [],
           posts: [],
+          news: [],
+          articles: [],
+          photos: [],
           photoURL: this.user.photoURL,
-          id: uuidv4(),
+        });
+        const querySnapshot = await getDocs(collection(db, "users"));
+        querySnapshot.forEach((doc) => {
+          if (doc.data().name === this.user.displayName) {
+            this.user.photoURL = doc.data().photoURL;
+          }
         });
         router.push('/')
       } catch (e) {

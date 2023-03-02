@@ -2,19 +2,28 @@
   <div class="banner">
     <div class="user">
       <div class="user_info">
-        <div class="user_avatar_wrapper">
+        <div
+          class="user_avatar_wrapper"
+          @mouseenter="profilePhotoHovered = true"
+          @mouseleave="profilePhotoHovered = false"
+        >
           <div class="user_avatar_box">
             <img :src="store.user.photoURL" alt="avatar" class="user_avatar" />
           </div>
-          <div class="dropdown_list">
-            <div class="dropdown_list-item" @click="changeProfilePhoto">Сменить фото</div>
-            <div
-              class="dropdown_list-item"
-              v-if="store.user.photoURL !== defaultPhotoURL"
-            >
-              Удалить фото
+          <TransitionGroup name="menu">
+            <div class="dropdown_list" v-if="profilePhotoHovered">
+              <div class="dropdown_list-item" @click="changeProfilePhoto">
+                Сменить фото
+              </div>
+              <div
+                class="dropdown_list-item"
+                v-if="store.user.photoURL !== defaultPhotoURL"
+                @click="deleteProfilePhoto"
+              >
+                Удалить фото
+              </div>
             </div>
-          </div>
+          </TransitionGroup>
         </div>
         <div class="text">
           <div class="user_name">{{ store.user.displayName }}</div>
@@ -43,17 +52,29 @@
 <script setup lang="ts">
 import SkButton from "../UIcomponents/SkButton.vue";
 import { useAuthStore } from "@/stores/auth";
+import { ref } from "vue";
+
+const profilePhotoHovered = ref<boolean>(false);
 const defaultPhotoURL =
   "https://images.are.na/eyJidWNrZXQiOiJhcmVuYV9pbWFnZXMiLCJrZXkiOiI4MDQwOTc0L29yaWdpbmFsX2ZmNGYxZjQzZDdiNzJjYzMxZDJlYjViMDgyN2ZmMWFjLnBuZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6MTIwMCwiaGVpZ2h0IjoxMjAwLCJmaXQiOiJpbnNpZGUiLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9LCJ3ZWJwIjp7InF1YWxpdHkiOjkwfSwianBlZyI6eyJxdWFsaXR5Ijo5MH0sInJvdGF0ZSI6bnVsbH19?bc=0";
 const store = useAuthStore();
+const emit = defineEmits<{
+  (e: "changeProfilePhoto"): void;
+  (e: "deleteProfilePhoto"): void;
+}>();
 
-function changeProfilePhoto(){
-    
+function changeProfilePhoto() {
+  emit("changeProfilePhoto");
+}
+
+function deleteProfilePhoto() {
+  emit("deleteProfilePhoto");
 }
 </script>
 
 <style scoped>
 .banner {
+  border: 1px solid #dce1e6;
   height: 500px;
   background-color: #f0f4f8;
   display: flex;
@@ -154,5 +175,15 @@ function changeProfilePhoto(){
 
 .dropdown_list-item:hover {
   background-color: #cecece;
+}
+
+.menu-enter-active,
+.menu-leave-active {
+  transition: all 0.2s ease;
+}
+.menu-enter-from,
+.menu-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
 }
 </style>
