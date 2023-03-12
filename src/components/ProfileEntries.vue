@@ -14,7 +14,9 @@
         <div class="nav_item-text">{{ item.title }}</div>
       </div>
     </nav>
-    <component :is="activeEntryComponent"></component>
+    <KeepAlive>
+      <component :is="activeEntryComponent"></component>
+    </KeepAlive>
   </div>
 </template>
 
