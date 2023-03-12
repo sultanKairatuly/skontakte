@@ -2,10 +2,15 @@
   <header class="header">
     <div class="header__content">
       <div class="header__logo">skontakte</div>
-      <input class="search" type="text" placeholder="Поиск" />
+      <input @input="searchUsers" class="search" type="text" placeholder="Поиск" v-model="search" />
+      <div class="menu">
+        <div class="user" v-for="user in users" :key="user.email" @click="viewProfile(user.email)">
+          {{ user.name }}
+        </div>
+      </div>
       <div
         class="profile"
-        @click="isProfileDropDown = !isProfileDropDown"
+        @click="openProfileDropdown"
         v-if="Object.keys(store.user).length"
       >
         <div class="user">
@@ -19,6 +24,7 @@
           v-if="isProfileDropDown"
           :dropdown-list="dropdownListItems"
           @listItemClicked="handleListItemClicked"
+          @close-profile-dropdown="closeProfileDropdown"
         />
       </div>
       <div v-else>регистрация</div>
@@ -27,12 +33,25 @@
 </template>
 
 <script setup lang="ts">
-import type { profileListItem } from "env";
+import type { profileListItem, UserDB } from "env";
 import ProfileDropdown from "./ProfileDropdown.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "@/stores/auth";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
+import {
+  getDocs,
+  doc,
+  updateDoc,
+  collection,
+  arrayUnion,
+} from "firebase/firestore";
+import { db } from '../../firebase'
+import {useRouter} from 'vue-router'
 
+
+const router = useRouter()
+const users: Array<UserDB> = reactive([])
+const search = ref<string>('')
 const store = useAuthStore();
 const isProfileDropDown = ref<boolean>(false);
 const dropdownListItems: Array<profileListItem> = [
@@ -72,9 +91,33 @@ function handleListItemClicked(list: profileListItem): void {
   dropdownListItems.forEach((listItem) => {
     if (list.id === listItem.id) {
       listItem.action();
+      isProfileDropDown.value = false
     }
   });
 }
+
+function openProfileDropdown(){
+  isProfileDropDown.value = !isProfileDropDown.value
+}
+
+function closeProfileDropdown(){
+  isProfileDropDown.value = false
+}
+
+async function searchUsers(){
+  const querySnapshot = await getDocs(collection(db, "users"));
+  users.splice(0)  
+  querySnapshot.forEach( (doc: any) => {
+    if(doc.data().name.toLowerCase().includes(search.value.toLowerCase()))
+      users.push(doc.data())
+    })
+}
+
+
+function viewProfile(userEmail: string){
+  router.push(`/user/${userEmail}`)
+}
+
 </script>
 
 <style scoped>
@@ -84,6 +127,7 @@ function handleListItemClicked(list: profileListItem): void {
   position: fixed;
   width: 100%;
   padding: 15px 0;
+  z-index: 100;
 }
 
 .dropdown_menu {
@@ -150,5 +194,66 @@ function handleListItemClicked(list: profileListItem): void {
 .avatar {
   width: 42px;
   height: 42px;
+}
+
+@media (max-width: 1440px) {
+ .header {
+  padding: 10px 0;
+}
+
+.dropdown_menu {
+  position: absolute;
+  left: -10px;
+  bottom: -235px;
+}
+
+.header__content {
+  margin: 0 auto;
+  font-size: 12.5px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header__logo {
+  font-size: 25px;
+}
+.search {
+  padding: 5px 30px;
+  font-size: 18px;
+  background-size: 16px 16px;
+}
+
+.profile {
+  padding: 2px;
+}
+
+.profile:hover {
+  background-color: #edeef0;
+}
+
+.dropdown {
+  width: 8px;
+  height: 8px;
+  border: 3px solid #aeb7c2;
+  border-bottom: none;
+  border-right: none;
+  transform: rotate(225deg);
+}
+.user {
+  align-items: center;
+  display: flex;
+  column-gap: 15px;
+}
+.avatar_wrapper {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+}
+
 }
 </style>

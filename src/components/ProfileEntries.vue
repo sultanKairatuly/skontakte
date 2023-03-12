@@ -14,19 +14,27 @@
         <div class="nav_item-text">{{ item.title }}</div>
       </div>
     </nav>
-    <component :is="activeEntryComponent"></component>
+    <KeepAlive>
+      <component :readonly="props.readonly"  :user="props.user" :is="activeEntryComponent"></component>
+    </KeepAlive>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import type { entriesNavItem } from "env";
+import type { entriesNavItem, UserDB } from "env";
 import EntriesPhoto from "../components/EntriesPhoto.vue";
 import EntriesPost from "../components/EntriesPost.vue";
 import EntriesArticle from "../components/EntriesArticle.vue";
 import type { Component } from "vue";
 
+const props = withDefaults(defineProps<{
+  readonly?: boolean,
+  user: UserDB
+}>(), {
+  readonly: false,
+})
 let activeEntryComponent: Component = EntriesPhoto;
 const navItems: Array<entriesNavItem> = [
   {
@@ -83,10 +91,33 @@ function changeEntryLink(link: entriesNavItem) {
   column-gap: 10px;
 }
 
+.nav_item:not(.active):hover {
+  background-color: #eaeaeabe;
+}
+
 .active {
   transition: 0.1s ease-in-out;
   box-shadow: 1px -2px 21px -4px rgba(34, 60, 80, 0.2);
   color: #346297;
   border: 2px solid #dce1e6;
+}
+
+@media (max-width: 1440px){
+  .entries {
+  padding: 25px;
+}
+
+.nav {
+  column-gap: 16px;
+  margin-bottom: 16px;
+}
+
+.nav_item {
+  padding: 6px 6px;
+  font-size: 16px;
+}
+
+
+
 }
 </style>

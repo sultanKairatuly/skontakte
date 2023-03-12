@@ -1,24 +1,14 @@
 <template>
-  <button
-    class="btn"
-    :style="{
-      padding: props.padding,
-      fontSize: props.fontSize,
-    }"
-  >
-    <slot></slot>
-  </button>
+<q-btn color="#e5ebf1" q-pa="md" text-color="#346bb4" :label="props.label" class="btn" />
 </template>
 
 <script setup lang="ts">
 const props = withDefaults(
   defineProps<{
-    fontSize?: string;
-    padding?: string;
-  }>(),
+    label?: string
+    }>(),
   {
-    fontSize: "16px",
-    padding: "20px",
+    label: 'Подтвердить'
   }
 );
 </script>

@@ -39,7 +39,17 @@ const localStorage = window.localStorage;
   display: flex;
   justify-content: center;
   margin: 0 auto;
-  width: 1600px;
-  padding-top: 100px;
+  padding: 0 30px;
+  max-width: 1600px;
+  padding: 100px 0;
 }
+
+
+@media (max-width: 1440px){
+  .container{
+    width: 65%
+  }
+}
+
+
 </style>

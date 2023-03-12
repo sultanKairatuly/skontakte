@@ -1,6 +1,6 @@
 <template>
   <div class="banner">
-    <div class="user">
+    <div class="user" v-if="!readonly">
       <div class="user_info">
         <div
           class="user_avatar_wrapper"
@@ -9,6 +9,7 @@
         >
           <div class="user_avatar_box">
             <img :src="store.user.photoURL" alt="avatar" class="user_avatar" />
+            <SkLoader v-if="props.isLoading"></SkLoader>
           </div>
           <TransitionGroup name="menu">
             <div class="dropdown_list" v-if="profilePhotoHovered">
@@ -41,9 +42,32 @@
       </div>
 
       <div class="helpers">
-        <SkButton :padding="'12px 30px'" :font-size="'18px'"
-          >Редактировать</SkButton
+        <SkButton @click="$router.push('/edit')" :padding="'1vh 3vw'" :font-size="'18px'" label="Редактировать" />
+      </div>
+    </div>
+    <div class="user" v-else>
+      <div class="user_info">
+        <div
+          class="user_avatar_wrapper"
         >
+          <div class="user_avatar_box">
+            <img :src="props.user.photoURL" alt="avatar" class="user_avatar" />
+            <SkLoader v-if="props.isLoading"></SkLoader>
+          </div>
+        </div>
+        <div class="text">
+          <div class="user_name">{{ props.user.name }}</div>
+          <div class="links">
+            <div class="link">
+              <i class="fa-solid fa-location-dot icon"></i>
+              <div class="link_text">Алматы</div>
+            </div>
+            <div class="link">
+              <i class="fa-solid fa-circle-info icon"></i>
+              <div class="link_text">Подробнее</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -51,8 +75,11 @@
 
 <script setup lang="ts">
 import SkButton from "../UIcomponents/SkButton.vue";
+import SkLoader from './SkLoader.vue'
 import { useAuthStore } from "@/stores/auth";
 import { ref } from "vue";
+import type { UserDB } from "env";
+
 
 const profilePhotoHovered = ref<boolean>(false);
 const defaultPhotoURL =
@@ -62,6 +89,15 @@ const emit = defineEmits<{
   (e: "changeProfilePhoto"): void;
   (e: "deleteProfilePhoto"): void;
 }>();
+const props = withDefaults(defineProps<{
+  isLoading?: boolean,
+  readonly?: boolean,
+  user: UserDB
+}>(), {
+  isLoading: false,
+  readonly: false
+})
+
 
 function changeProfilePhoto() {
   emit("changeProfilePhoto");
@@ -113,6 +149,7 @@ function deleteProfilePhoto() {
 
 .user_avatar_box {
   width: 180px;
+  position: relative;
   height: 180px;
   overflow: hidden;
   border-radius: 50%;
@@ -185,5 +222,62 @@ function deleteProfilePhoto() {
 .menu-leave-to {
   opacity: 0;
   transform: translateY(10px);
+}
+
+@media (max-width: 1440px){
+  .banner {
+  height: 450px;
+}
+.user {
+  height: 110px;
+  padding: 15px;
+}
+
+.user_info {
+  column-gap: 25px;
+}
+.user_avatar_wrapper {
+  width: 160px;
+  height: 160px;
+}
+
+.user_avatar_box {
+  width: 160px;
+  height: 160px;
+}
+.user_avatar {
+  width: 160px;
+  height: 160px;
+}
+.user_name {
+  font-size: 24px;
+}
+.links {
+  margin-top: 10px;
+  column-gap: 25px;
+}
+
+.icon {
+  font-size: 18px;
+}
+.link_text {
+  font-size: 17px;
+}
+
+
+.helpers {
+  column-gap: 12px;
+}
+
+.dropdown_list {
+  width: 180px;
+  padding: 3px;
+}
+
+.dropdown_list-item {
+  font-size: 18px;
+  padding: 12px;
+}
+
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="dropdown_menu">
-    <div class="profile" @click="$router.push('/profile')">
+    <div class="profile" @click="openUserProfile">
       <div class="user_avatar_container">
         <img
           :src="getImageUrl(store.user.photoURL)"
@@ -26,12 +26,24 @@
 import type { profileListItem } from "env";
 import { useAuthStore } from "@/stores/auth";
 import { useImageGetter } from "../composables/utilities";
+import router from "@/router";
 
 const { getImageUrl } = useImageGetter();
 const store = useAuthStore();
 const props = defineProps<{
   dropdownList?: Array<profileListItem>;
 }>();
+
+const emit = defineEmits<{
+  (e: 'closeProfileDropdown'): void;
+}>()
+
+
+function openUserProfile(){
+  router.push('/profile')
+  emit('closeProfileDropdown')
+
+}
 </script>
 
 <style scoped>
@@ -86,5 +98,32 @@ const props = defineProps<{
 
 .profile:hover {
   background-color: #ebf3ff;
+}
+
+@media (max-width: 1440px) {
+  .dropdown_menu {
+  width: 250px;
+  padding: 15px;
+}
+
+.dropdown_menu_item {
+  padding: 10px 25px;
+  font-size: 18px;
+}
+
+.user_avatar_container {
+  width: 42px;
+  height: 42px;
+}
+
+.user_avatar {
+  width: 42px;
+  height: 42px;
+}
+
+.profile {
+  padding: 10px 22px;
+}
+
 }
 </style>

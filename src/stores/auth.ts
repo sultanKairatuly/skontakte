@@ -67,7 +67,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async loginUser(payload: Omit<User, "name" | "photoURL">) {
       const { email, password } = payload;
-
+      
       try {
         await signInWithEmailAndPassword(auth, email, password);
         this.user = auth.currentUser;

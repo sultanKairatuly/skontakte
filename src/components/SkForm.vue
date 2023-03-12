@@ -1,6 +1,13 @@
 <template>
   <form class="form">
-    <slot name="inputs"></slot>
+    <div class="main">
+      <div class="inputs">
+        <slot name="inputs"></slot>
+      </div>
+      <div class="inputs">
+        <slot name="inputs2"></slot>
+      </div>
+    </div>
     <slot name="btns"></slot>
   </form>
 </template>
@@ -12,5 +19,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.main {
+  display: flex;
+  column-gap: 30px;
+  align-items: flex-start;
 }
 </style>

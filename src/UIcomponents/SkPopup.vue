@@ -41,6 +41,7 @@ function closePopup() {
   position: relative;
   background-color: #fff;
   padding: 40px 30px;
+  border-radius: 10px;
 }
 
 .close {
