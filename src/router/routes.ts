@@ -16,6 +16,7 @@ const routes:   RouteRecordRaw[]  = [
     {
         path: '/',
         alias: '/home',
+        name: 'Home',
         meta: {
             requiresAuth: true
         },
@@ -26,6 +27,21 @@ const routes:   RouteRecordRaw[]  = [
         name: 'Profile',
         component: () => import('../views/UserProfile.vue'),
     },
+    {
+        path: '/add-post',
+        name: 'Add Post',
+        component: () => import('../components/AddPost.vue')
+    },
+    {
+        path: '/user/:usermail',
+        name: 'User',
+        component: () => import('../views/ViewProfile.vue')
+    },
+    {
+        path: '/edit',
+        name: 'Edit',
+        component: () => import('../views/ProfileEdit.vue')
+    }
 ]
 
 

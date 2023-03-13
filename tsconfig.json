@@ -7,7 +7,7 @@
       "@/*": ["./src/*"]
     }
   },
-
+  "target": "es2017",
   "references": [
     {
       "path": "./tsconfig.config.json"

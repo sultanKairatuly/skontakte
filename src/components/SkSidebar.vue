@@ -46,7 +46,7 @@ const sidebarItems: Array<sidebarItem> = [
 
 <style scoped>
 .sidebar {
-  width: 16%;
+  width: 13%;
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
@@ -74,5 +74,24 @@ const sidebarItems: Array<sidebarItem> = [
 
 .sidebar_item-title {
   font-size: 18px;
+}
+
+@media (max-width: 1440px) {
+  .sidebar {
+  padding: 15px;
+}
+
+.sidebar_item {
+  column-gap: 10px;
+  padding: 5px;
+}
+
+.sidebar_item-icon {
+  font-size: 20px;
+}
+
+.sidebar_item-title {
+  font-size: 16px;
+}
 }
 </style>

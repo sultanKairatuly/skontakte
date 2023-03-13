@@ -6,6 +6,10 @@
       @input="updateModel"
       :placeholder="props.placeholder"
       :type="props.type"
+      :style="{
+        padding: props.padding,
+        fontSize: props.fontSize,
+      }"
     />
     <i class="icon" :class="props.icon" @click="$emit('iconClicked')"></i>
   </div>
@@ -17,18 +21,22 @@ import { ref } from "vue";
 const input = ref<null | HTMLInputElement>(null);
 const props = withDefaults(
   defineProps<{
+    padding?: string;
+    fontSize?: string;
     modelValue?: string;
     placeholder?: string;
     type?: string;
     icon?: string;
+    label?: string;
   }>(),
   {
     type: "text",
+    padding: "15px 35px",
+    fontSize: "18px",
   }
 );
 const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
-  (e: "emitNodeRef", value: HTMLInputElement | null): void;
 }>();
 
 function updateModel(e: Event) {
@@ -43,7 +51,6 @@ function updateModel(e: Event) {
 }
 .input_item {
   position: relative;
-  padding: 15px 35px;
   background-color: #edeef0;
   border-radius: 10px;
   border: none;
@@ -61,7 +68,7 @@ function updateModel(e: Event) {
 .icon {
   color: #447bba;
   position: absolute;
-  right: 50px;
+  right: 10px;
   cursor: pointer;
   font-size: 20px;
   top: 50%;

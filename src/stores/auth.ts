@@ -7,14 +7,12 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
-import { v4 as uuidv4 } from "uuid";
-import type {User, UserDB } from '../../env.d'
+import type { Updates, User } from 'env'
 import router from '@/router';
 import {
   getDocs,
   doc,
   updateDoc,
-  arrayUnion,
 } from "firebase/firestore";
 
 
@@ -30,20 +28,31 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     async registerUser(user: User){
-      const { email, password, name, photoURL } = user;
+      const { 
+        email, 
+        password, 
+        name, 
+        photoURL,
+      } = user;
 
       try {
         const userCredentilas = await createUserWithEmailAndPassword(
           auth,
           email,
-          password
+          password,
+
         );
-        console.log(userCredentilas.user)
         await updateProfile(userCredentilas.user, {
           displayName: name,
           photoURL: photoURL || 'https://images.are.na/eyJidWNrZXQiOiJhcmVuYV9pbWFnZXMiLCJrZXkiOiI4MDQwOTc0L29yaWdpbmFsX2ZmNGYxZjQzZDdiNzJjYzMxZDJlYjViMDgyN2ZmMWFjLnBuZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6MTIwMCwiaGVpZ2h0IjoxMjAwLCJmaXQiOiJpbnNpZGUiLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9LCJ3ZWJwIjp7InF1YWxpdHkiOjkwfSwianBlZyI6eyJxdWFsaXR5Ijo5MH0sInJvdGF0ZSI6bnVsbH19?bc=0',
         });
-        this.user = auth.currentUser;
+        
+        this.user = {
+          ...auth.currentUser,
+          city: user.city,
+          gender: user.gender,
+          birthday: user.birthday
+        }
         localStorage.setItem("user", JSON.stringify(this.user));
         await addDoc(collection(db, "users"), {
           name: this.user.displayName,
@@ -53,6 +62,9 @@ export const useAuthStore = defineStore('auth', {
           articles: [],
           photos: [],
           photoURL: this.user.photoURL,
+          city: user.city,
+          gender: user.gender,
+          birthday: user.birthday,
         });
         const querySnapshot = await getDocs(collection(db, "users"));
         querySnapshot.forEach((doc) => {
@@ -67,7 +79,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async loginUser(payload: Omit<User, "name" | "photoURL">) {
       const { email, password } = payload;
-
+      
       try {
         await signInWithEmailAndPassword(auth, email, password);
         this.user = auth.currentUser;
@@ -95,6 +107,33 @@ export const useAuthStore = defineStore('auth', {
       this.user = {};
       router.push("/login");
     },
+    async setPhoto(){
+
+    },
+    async updateUser(updates: Updates){
+      let docId = "";
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc: any) => {
+        const docEmail = doc.data().email;
+        if (docEmail === this.user.email) {
+          docId = doc.id;
+        }
+      });
+    
+      await updateDoc(doc(db, "users", docId), {
+        name: updates.name,
+        gender: updates.gender,
+        city: updates.city,
+        birthday: updates.birthday,
+      });
+
+      this.user.displayName = updates.name 
+      this.user.city = updates.city
+      this.user.birthday = updates.birthday
+      this.user.gender = updates.gender
+
+      localStorage.setItem('user', JSON.stringify(this.user))
+    }
   }
 }
 )

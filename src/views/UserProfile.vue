@@ -1,11 +1,13 @@
 <template>
   <div class="container">
-    <ProfileBanner
+    <ProfileBanner 
+      :user="({} as UserDB)"
       class="banner"
       @changeProfilePhoto="openProfilePhotoPopup"
       @deleteProfilePhoto="deleteProfilePhoto"
+      :is-loading="isProfilePhotoLoading"
     />
-    <ProfileEntries />
+    <ProfileEntries :user="({} as UserDB)" />
   </div>
   <Teleport to=".app" v-if="isPopup">
     <SkPopup @close-popup="closePopup">
@@ -41,6 +43,7 @@ import SkButton from "@/UIcomponents/SkButton.vue";
 import ProfileBanner from "@/components/ProfileBanner.vue";
 import { useAuthStore } from "../stores/auth";
 import ProfileEntries from "../components/ProfileEntries.vue";
+import type { UserDB } from "env";
 import {
   getDocs,
   doc,
@@ -50,17 +53,19 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 
+const isProfilePhotoLoading = ref<boolean>(false)
 const isPopup = ref<boolean>(false);
 const photoURL = ref<string>("");
 const store = useAuthStore();
 
 async function fetchPhotoURL(prop: string) {
+  isProfilePhotoLoading.value = true;
+  console.log('TTTRUUUEEWW')
   let id: string = "";
   const querySnapshot = await getDocs(collection(db, "users"));
   querySnapshot.forEach((doc) => {
     if (doc.data().name === store.user.displayName) {
       id = doc.id;
-      console.log(id);
     }
   });
 
@@ -70,9 +75,7 @@ async function fetchPhotoURL(prop: string) {
 
   store.user.photoURL = prop;
   localStorage.setItem("user", JSON.stringify(store.user));
-  store.loading = false;
   isPopup.value = false;
-  console.log("updated");
 }
 
 function openProfilePhotoPopup(): void {
@@ -80,7 +83,6 @@ function openProfilePhotoPopup(): void {
 }
 
 async function deleteProfilePhoto() {
-  store.loading = true;
   fetchPhotoURL(
     "https://images.are.na/eyJidWNrZXQiOiJhcmVuYV9pbWFnZXMiLCJrZXkiOiI4MDQwOTc0L29yaWdpbmFsX2ZmNGYxZjQzZDdiNzJjYzMxZDJlYjViMDgyN2ZmMWFjLnBuZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6MTIwMCwiaGVpZ2h0IjoxMjAwLCJmaXQiOiJpbnNpZGUiLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9LCJ3ZWJwIjp7InF1YWxpdHkiOjkwfSwianBlZyI6eyJxdWFsaXR5Ijo5MH0sInJvdGF0ZSI6bnVsbH19?bc=0"
   );
@@ -91,20 +93,29 @@ async function deleteProfilePhoto() {
       localStorage.setItem("user", JSON.stringify(store.user));
     }
   });
+
+  setTimeout(() => {
+    isProfilePhotoLoading.value = false;
+    console.log('FFFAAALSSEEE')
+  }, 1000);
+  
 }
 
 async function changeProfilePhoto() {
-  store.loading = true;
   fetchPhotoURL(photoURL.value);
   const querySnapshot = await getDocs(collection(db, "users"));
   querySnapshot.forEach((doc) => {
     if (doc.data().email === store.user.email) {
       store.user.photoURL = doc.data().photoURL;
       localStorage.setItem("user", JSON.stringify(store.user));
-      store.loading = false;
       isPopup.value = false;
     }
   });
+  setTimeout(() => {
+    isProfilePhotoLoading.value = false;
+    console.log('FFFAAALSSEEE2342343')
+  }, 1000);
+
 }
 
 function closePopup(): void {

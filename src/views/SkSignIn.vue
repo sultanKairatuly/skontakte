@@ -125,4 +125,40 @@ function login(e: Event) {
   text-align: center;
   margin: 15px 0;
 }
+
+@media (max-width: 1440px) {
+.title {
+  margin: 28px 0;
+  font-size: 28px;
+}
+.content {
+  width: 400px;
+}
+
+.input {
+  margin: 15px 0;
+  width: 100%;
+}
+
+.login {
+  font-size: 18px;
+  padding: 10px;
+}
+
+
+
+.register {
+  font-size: 18px;
+  padding: 10px;
+}
+
+
+.info {
+  opacity: 0.7;
+  font-size: 15px;
+  text-align: center;
+  margin: 15px 0;
+}
+
+}
 </style>

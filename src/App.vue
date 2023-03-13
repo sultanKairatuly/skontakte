@@ -2,8 +2,13 @@
   <div class="app">
     <SkHeader />
     <div class="app_layout">
-      <SkSidebar v-if="localStorage.getItem('user')" />
-      <router-view></router-view>
+      <SkSidebar v-if="Object.keys(authStore.user).length > 0" />
+      <router-view @changesSaved="changesSaved"></router-view>
+      <TransitionGroup name="savedMessage">
+        <div class="message">
+          <SkNotification v-if="isSavedMessage" />
+        </div>
+      </TransitionGroup>
     </div>
   </div>
 </template>
@@ -11,8 +16,21 @@
 <script setup lang="ts">
 import SkHeader from "./components/SkHeader.vue";
 import SkSidebar from "./components/SkSidebar.vue";
+import SkNotification from "./UIcomponents/SkNotification.vue";
+import { useAuthStore } from "./stores/auth";
+import { ref } from "vue";
 
+const authStore = useAuthStore();
+
+const isSavedMessage = ref<boolean>(false);
 const localStorage = window.localStorage;
+
+function changesSaved() {
+  isSavedMessage.value = true;
+  setTimeout(() => {
+    isSavedMessage.value = false;
+  }, 1000);
+}
 </script>
 
 <style>
@@ -25,7 +43,6 @@ const localStorage = window.localStorage;
 
 .app {
   position: relative;
-
   background-color: #edeef0;
 }
 
@@ -39,7 +56,23 @@ const localStorage = window.localStorage;
   display: flex;
   justify-content: center;
   margin: 0 auto;
-  width: 1600px;
-  padding-top: 100px;
+  max-width: 1600px;
+  padding: 125px 0;
+}
+
+@media (max-width: 1440px) {
+  .container {
+    width: 65%;
+  }
+}
+
+.savedMessage-enter-active,
+.savedMessage-leave-active {
+  transition: all 0.5s ease;
+}
+.savedMessage-enter-from,
+.savedMessage-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>
