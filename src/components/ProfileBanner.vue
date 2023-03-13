@@ -115,7 +115,7 @@ function deleteProfilePhoto() {
 <style scoped>
 .banner {
   border: 1px solid #dce1e6;
-  height: 500px;
+  height: 400px;
   background-color: #f0f4f8;
   display: flex;
   border-radius: 30px;

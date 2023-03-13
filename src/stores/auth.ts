@@ -6,7 +6,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, arrayUnion } from "firebase/firestore";
 import type { Updates, User } from 'env'
 import router from '@/router';
 import {
@@ -51,7 +51,8 @@ export const useAuthStore = defineStore('auth', {
           ...auth.currentUser,
           city: user.city,
           gender: user.gender,
-          birthday: user.birthday
+          birthday: user.birthday,
+          friends: user.friends
         }
         localStorage.setItem("user", JSON.stringify(this.user));
         await addDoc(collection(db, "users"), {
@@ -115,6 +116,40 @@ export const useAuthStore = defineStore('auth', {
         return;
       }
     },
+    async addFriend(friends: Array<User>){
+      let docId = "";
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc: any) => {
+        const docEmail = doc.data().email;
+        if (docEmail === this.user.email) {
+          docId = doc.id;
+        }
+      });
+    
+      await updateDoc(doc(db, "users", docId), {
+        friends: friends
+      });
+
+
+      localStorage.setItem('user', JSON.stringify(this.user))
+    },
+    async refreshUser(){
+      let docId = "";
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc: any) => {
+        const docEmail = doc.data().email;
+        if (docEmail === this.user.email) {
+          this.user = {
+            ...this.user,
+            ...doc.data()
+          }
+
+          localStorage.setItem('user', JSON.stringify(this.user))
+          localStorage.setItem('posts', JSON.stringify(this.user.posts))
+          console.log(this.user.posts)
+        }
+      });
+    },
     async logoutUser() {
       await signOut(auth);
       localStorage.removeItem("user");
@@ -122,9 +157,6 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem("photos");
       this.user = {};
       router.push("/login");
-    },
-    async setPhoto(){
-
     },
     async updateUser(updates: Updates){
       let docId = "";

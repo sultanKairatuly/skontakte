@@ -1,13 +1,16 @@
 <template>
   <div class="container">
-    <ProfileBanner 
+    <ProfileBanner
       :user="({} as UserDB)"
       class="banner"
       @changeProfilePhoto="openProfilePhotoPopup"
       @deleteProfilePhoto="deleteProfilePhoto"
       :is-loading="isProfilePhotoLoading"
     />
-    <ProfileEntries :user="({} as UserDB)" />
+    <div class="profile_bottom">
+      <ProfileEntries class="entries" :user="({} as UserDB)" />
+      <UserInformation class="user_information" />
+    </div>
   </div>
   <Teleport to=".app" v-if="isPopup">
     <SkPopup @close-popup="closePopup">
@@ -43,6 +46,7 @@ import SkButton from "@/UIcomponents/SkButton.vue";
 import ProfileBanner from "@/components/ProfileBanner.vue";
 import { useAuthStore } from "../stores/auth";
 import ProfileEntries from "../components/ProfileEntries.vue";
+import UserInformation from "../components/UserInformation.vue";
 import type { UserDB } from "env";
 import {
   getDocs,
@@ -53,14 +57,14 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 
-const isProfilePhotoLoading = ref<boolean>(false)
+const isProfilePhotoLoading = ref<boolean>(false);
 const isPopup = ref<boolean>(false);
 const photoURL = ref<string>("");
 const store = useAuthStore();
 
 async function fetchPhotoURL(prop: string) {
   isProfilePhotoLoading.value = true;
-  console.log('TTTRUUUEEWW')
+  console.log("TTTRUUUEEWW");
   let id: string = "";
   const querySnapshot = await getDocs(collection(db, "users"));
   querySnapshot.forEach((doc) => {
@@ -96,9 +100,8 @@ async function deleteProfilePhoto() {
 
   setTimeout(() => {
     isProfilePhotoLoading.value = false;
-    console.log('FFFAAALSSEEE')
+    console.log("FFFAAALSSEEE");
   }, 1000);
-  
 }
 
 async function changeProfilePhoto() {
@@ -113,9 +116,8 @@ async function changeProfilePhoto() {
   });
   setTimeout(() => {
     isProfilePhotoLoading.value = false;
-    console.log('FFFAAALSSEEE2342343')
+    console.log("FFFAAALSSEEE2342343");
   }, 1000);
-
 }
 
 function closePopup(): void {
@@ -147,5 +149,18 @@ function closePopup(): void {
 
 .banner {
   margin-bottom: 30px;
+}
+
+.entries {
+  width: 58%;
+}
+
+.profile_bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.user_information {
+  width: 40%;
 }
 </style>

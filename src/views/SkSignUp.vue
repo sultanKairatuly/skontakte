@@ -188,6 +188,7 @@ function register(e: Event): void {
     birthday: `${dayFormatted.value}.${monthFormatted.value}.${birthday.year}`,
     city: city.value,
     gender: gender.value,
+    friends: [],
   };
   loading.value = false;
   store.registerUser(user);

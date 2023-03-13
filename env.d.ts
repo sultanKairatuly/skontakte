@@ -49,11 +49,16 @@ export type User = {
     birthday: string,
     city: string,
     gender: string
+    friends: Array<User>
 }
+
+
+
 
 export type Comment = {
     author: string,
-    message: string
+    authorProfilePhoto: string
+    comment: string
 }
 
 export type UserDB = {

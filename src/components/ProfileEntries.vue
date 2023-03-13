@@ -15,7 +15,11 @@
       </div>
     </nav>
     <KeepAlive>
-      <component :readonly="props.readonly"  :user="props.user" :is="activeEntryComponent"></component>
+      <component
+        :readonly="props.readonly"
+        :user="props.user"
+        :is="activeEntryComponent"
+      ></component>
     </KeepAlive>
   </div>
 </template>
@@ -28,13 +32,18 @@ import EntriesPhoto from "../components/EntriesPhoto.vue";
 import EntriesPost from "../components/EntriesPost.vue";
 import EntriesArticle from "../components/EntriesArticle.vue";
 import type { Component } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
-const props = withDefaults(defineProps<{
-  readonly?: boolean,
-  user: UserDB
-}>(), {
-  readonly: false,
-})
+const store = useAuthStore();
+const props = withDefaults(
+  defineProps<{
+    readonly?: boolean;
+    user: UserDB;
+  }>(),
+  {
+    readonly: false,
+  }
+);
 let activeEntryComponent: Component = EntriesPhoto;
 const navItems: Array<entriesNavItem> = [
   {
@@ -67,7 +76,7 @@ function changeEntryLink(link: entriesNavItem) {
 <style scoped>
 .entries {
   background-color: #fff;
-  padding: 30px;
+  padding: 15px 20px;
   border-radius: 20px;
   border: 1px solid #dce1e6;
 }
@@ -102,22 +111,19 @@ function changeEntryLink(link: entriesNavItem) {
   border: 2px solid #dce1e6;
 }
 
-@media (max-width: 1440px){
+@media (max-width: 1440px) {
   .entries {
-  padding: 25px;
-}
+    padding: 25px;
+  }
 
-.nav {
-  column-gap: 16px;
-  margin-bottom: 16px;
-}
+  .nav {
+    column-gap: 16px;
+    margin-bottom: 16px;
+  }
 
-.nav_item {
-  padding: 6px 6px;
-  font-size: 16px;
-}
-
-
-
+  .nav_item {
+    padding: 6px 6px;
+    font-size: 16px;
+  }
 }
 </style>

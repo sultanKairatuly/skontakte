@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { Post, UserDB } from 'env'
+import type { Post, Comment } from 'env'
 import { useAuthStore } from './auth'
 import { db } from "../../firebase";
 import {
@@ -7,6 +7,7 @@ import {
   getDocs,
   doc,
   updateDoc,
+  arrayUnion
 } from "firebase/firestore";
 
 export const usePostStore = defineStore('post', {
@@ -35,6 +36,8 @@ export const usePostStore = defineStore('post', {
             return item
           }
         })
+        localStorage.setItem('posts', JSON.stringify(this.posts))
+
         let docId = ''
         const querySnapshot = await getDocs(collection(db, "users"));
         querySnapshot.forEach( (doc: any) => {
@@ -47,8 +50,33 @@ export const usePostStore = defineStore('post', {
             posts: this.posts
         });
       },
-      commentPost(postId: string){
-
+      async commentPost(postId: string, comment: Comment){
+        const authStore = useAuthStore()
+        this.posts = this.posts.map( (item: Post) => {
+          if(item.id === postId){
+            return {
+              ...item,
+              comments: [
+                ...item.comments,
+                comment
+              ]
+            }
+          }else{
+            return item
+          }
+        })
+        localStorage.setItem('posts', JSON.stringify(this.posts))
+        let docId = ''
+        const querySnapshot = await getDocs(collection(db, "users"));
+        querySnapshot.forEach( (doc: any) => {
+            const docEmail = doc.data().email
+            if(docEmail === authStore.user.email){
+                docId = doc.id
+            }
+        })
+        await updateDoc(doc(db, "users", docId), {
+            posts: this.posts
+        });
       }
     }
   }
