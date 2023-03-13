@@ -70,6 +70,7 @@ export const useAuthStore = defineStore('auth', {
         querySnapshot.forEach((doc) => {
           if (doc.data().name === this.user.displayName) {
             this.user.photoURL = doc.data().photoURL;
+            localStorage.setItem('posts', JSON.stringify(doc.data().posts))
           }
         });
         router.push('/')
@@ -77,12 +78,25 @@ export const useAuthStore = defineStore('auth', {
         console.log(e);
       }
     },
-    async loginUser(payload: Omit<User, "name" | "photoURL">) {
+    async loginUser(payload: Omit<User, "name" | "photoURL" | "city" | "gender" | "birthday">) {
       const { email, password } = payload;
       
       try {
         await signInWithEmailAndPassword(auth, email, password);
         this.user = auth.currentUser;
+        console.log(this.user.displayName)
+        const querySnapshot = await getDocs(collection(db, "users"));
+        querySnapshot.forEach((doc) => {
+          console.log(doc)
+          if (doc.data().name === this.user.displayName) {
+            this.user.photoURL = doc.data().photoURL;
+            this.user.gender = doc.data().gender
+            this.user.city = doc.data().city
+            this.user.birthday = doc.data().birthday
+            console.log(this.user)
+            localStorage.setItem('posts', JSON.stringify(doc.data().posts))
+          }
+        });
         localStorage.setItem("user", JSON.stringify(this.user));
         router.push("/");
       } catch (e: any) {
@@ -104,6 +118,8 @@ export const useAuthStore = defineStore('auth', {
     async logoutUser() {
       await signOut(auth);
       localStorage.removeItem("user");
+      localStorage.removeItem("posts");
+      localStorage.removeItem("photos");
       this.user = {};
       router.push("/login");
     },

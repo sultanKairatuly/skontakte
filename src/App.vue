@@ -5,7 +5,7 @@
       <SkSidebar v-if="Object.keys(authStore.user).length > 0" />
       <router-view @changesSaved="changesSaved"></router-view>
       <TransitionGroup name="savedMessage">
-        <div class="message">
+        <div class="message" key="0">
           <SkNotification v-if="isSavedMessage" />
         </div>
       </TransitionGroup>
