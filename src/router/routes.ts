@@ -25,22 +25,47 @@ const routes:   RouteRecordRaw[]  = [
     {
         path: '/profile',
         name: 'Profile',
+        meta: {
+            requiresAuth: true
+        },
         component: () => import('../views/UserProfile.vue'),
     },
     {
         path: '/add-post',
         name: 'Add Post',
+        meta: {
+            requiresAuth: true
+        },
         component: () => import('../components/AddPost.vue')
     },
     {
         path: '/user/:usermail',
         name: 'User',
+        meta: {
+            requiresAuth: true
+        },
         component: () => import('../views/ViewProfile.vue')
     },
     {
         path: '/edit',
         name: 'Edit',
+        meta: {
+            requiresAuth: true
+        },
         component: () => import('../views/ProfileEdit.vue')
+    },
+    {
+        path: "/friends",
+        name: "Friends",
+        meta: {
+            requiresAuth: true
+        },
+        component: () => import('../views/FriendsPage.vue')
+    },
+    {
+        path: "/friends/:email",
+        name: "FriendsWithProps",
+        component: () => import('../views/ViewFriendsPage.vue')
     }
 ]
 

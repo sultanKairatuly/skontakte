@@ -16,6 +16,7 @@
     </nav>
     <KeepAlive>
       <component
+        :loading="loading"
         :readonly="props.readonly"
         :user="props.user"
         :is="activeEntryComponent"
@@ -25,16 +26,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import type { entriesNavItem, UserDB } from "env";
-import EntriesPhoto from "../components/EntriesPhoto.vue";
-import EntriesPost from "../components/EntriesPost.vue";
-import EntriesArticle from "../components/EntriesArticle.vue";
+import EntriesPhoto from "./EntriesPhoto.vue";
+import EntriesPost from "./EntriesPost.vue";
+import EntriesArticle from "./EntriesArticle.vue";
 import type { Component } from "vue";
-import { useAuthStore } from "@/stores/auth";
 
-const store = useAuthStore();
+const loading = ref<boolean>(true);
 const props = withDefaults(
   defineProps<{
     readonly?: boolean;
@@ -42,6 +42,21 @@ const props = withDefaults(
   }>(),
   {
     readonly: false,
+  }
+);
+watch(
+  () => props.user,
+  (nv) => {
+    const isUser = Object.keys(nv).length > 0;
+    if (isUser) {
+      console.log("NNNNNVVVV:::  ", nv);
+      loading.value = false;
+    } else {
+      loading.value = true;
+    }
+  },
+  {
+    deep: true,
   }
 );
 let activeEntryComponent: Component = EntriesPhoto;

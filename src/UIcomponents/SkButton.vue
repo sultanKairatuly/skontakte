@@ -1,14 +1,22 @@
 <template>
-<q-btn color="#e5ebf1" q-pa="md" text-color="#346bb4" :label="props.label" class="btn" />
+  <q-btn
+    color="#e5ebf1"
+    q-pa="md"
+    text-color="#346bb4"
+    :label="props.label"
+    class="btn"
+    :icon="props.icon"
+  />
 </template>
 
 <script setup lang="ts">
 const props = withDefaults(
   defineProps<{
-    label?: string
-    }>(),
+    label?: string;
+    icon?: string;
+  }>(),
   {
-    label: 'Подтвердить'
+    label: "Подтвердить",
   }
 );
 </script>

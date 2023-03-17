@@ -2,12 +2,31 @@
   <div class="wrapper" @mousedown="closePopup">
     <div class="modal" @mousedown.stop>
       <i class="fa-sharp close fa-solid fa-xmark" @click="closePopup"></i>
-      <slot name="modal"></slot>
+      <div
+        class="pad-wrapper"
+        :style="{
+          width: props.width,
+          padding: props.padding,
+        }"
+      >
+        <slot name="modal"></slot>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    padding?: string;
+    width?: string;
+  }>(),
+  {
+    padding: "40px 30px",
+    width: "auto",
+  }
+);
+
 const emit = defineEmits<{
   (e: "closePopup"): void;
 }>();
@@ -34,13 +53,17 @@ function closePopup() {
   height: 100%;
   top: 0;
   left: 0;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.pad-wrapper {
   overflow: hidden;
 }
 
 .modal {
   position: relative;
   background-color: #fff;
-  padding: 40px 30px;
   border-radius: 10px;
 }
 

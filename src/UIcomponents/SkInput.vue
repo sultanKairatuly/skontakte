@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <input
+    <!-- <input
       class="input_item"
       :value="props.modelValue"
       @input="updateModel"
@@ -11,21 +11,45 @@
         fontSize: props.fontSize,
       }"
     />
-    <i class="icon" :class="props.icon" @click="$emit('iconClicked')"></i>
+    <i class="icon" :class="props.icon" @click="$emit('iconClicked')"></i> -->
+    <q-input
+      :modelValue="props.modelValue"
+      @update:model-value="updateModel"
+      :label="props.label"
+      icon="check"
+      outlined
+      :placeholder="props.placeholder"
+      :type="props.type"
+    >
+      <template v-slot:append>
+        <q-icon class="icon" @click="$emit('iconClicked')" :name="icon" />
+      </template>
+    </q-input>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+type InputTypes =
+  | "number"
+  | "text"
+  | "search"
+  | "textarea"
+  | "time"
+  | "password"
+  | "email"
+  | "tel"
+  | "file"
+  | "url"
+  | "date"
+  | undefined;
 
-const input = ref<null | HTMLInputElement>(null);
 const props = withDefaults(
   defineProps<{
     padding?: string;
     fontSize?: string;
     modelValue?: string;
     placeholder?: string;
-    type?: string;
+    type?: InputTypes;
     icon?: string;
     label?: string;
   }>(),
@@ -36,12 +60,11 @@ const props = withDefaults(
   }
 );
 const emit = defineEmits<{
-  (e: "update:modelValue", value: string): void;
+  (e: "update:modelValue", value: string | number | null): void;
 }>();
 
-function updateModel(e: Event) {
-  const target = e.target as HTMLInputElement;
-  emit("update:modelValue", target.value);
+function updateModel(value: string | number | null) {
+  emit("update:modelValue", value);
 }
 </script>
 

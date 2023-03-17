@@ -1,57 +1,72 @@
 <template>
   <div class="content" v-if="!props.readonly">
-    <div class="images" v-if="photoStore.photos.length > 0">
-      <div
-        class="user-image_container"
-        v-for="(image, index) in photoStore.photos"
-        :class="{
-          last: index === photoStore.photos.length - 1,
-          first: index === 0,
-        }"
-      >
-        <img
-          :src="getImageUrl(image.url)"
-          class="user-image"
-          :key="image.url"
+    <SkLoader v-if="photoStore.photoLoading" />
+    <div v-else class="loader-wrapper">
+      <div class="images" v-if="photoStore.photos.length > 0">
+        <div
+          class="user-image_container"
+          v-for="(image, index) in photoStore.photos"
+          :class="{
+            last: index === photoStore.photos.length - 1,
+            first: index === 0,
+          }"
+        >
+          <img
+            :src="getImageUrl(image.url)"
+            class="user-image"
+            :key="image.url"
+          />
+        </div>
+      </div>
+      <div v-else class="no-photo_message">У вас нет фото</div>
+      <div class="btns">
+        <SkButton
+          :font-size="'18px'"
+          :padding="'10px 25px'"
+          @click="uploadImage"
+          label="Загрузить"
+        />
+        <SkButton
+          v-if="photoStore.photos.length > 4"
+          :font-size="'18px'"
+          :padding="'10px 25px'"
+          @click="uploadImage"
+          label="Показать ещё"
         />
       </div>
     </div>
-    <div v-else class="no-photo_message">У вас нет фото</div>
-    <div class="btns">
-      <SkButton
-        :font-size="'18px'"
-        :padding="'10px 25px'"
-        @click="uploadImage"
-        label="Загрузить"
-      />
-      <SkButton
-        v-if="photoStore.photos.length > 4"
-        :font-size="'18px'"
-        :padding="'10px 25px'"
-        @click="uploadImage"
-        label="Показать ещё"
-      />
-    </div>
   </div>
-  <div class="loading" v-if="loading && props.readonly">loading...</div>
-  <div class="content" v-if="!loading && props.readonly">
-    <div class="images" v-if="props.user.photos.length > 0">
-      <img
-        :src="getImageUrl(image.url)"
-        v-for="image in props.user.photos"
-        class="user-image"
-        :key="image.url"
-      />
+  <div class="content" v-if="props.readonly">
+    <div v-if="!props.loading" class="images-wrapper">
+      <div class="images" v-if="props.user.photos.length > 0">
+        <div
+          class="user-image_container"
+          v-for="(image, index) in props.user.photos"
+          :class="{
+            last: index === props.user.photos.length - 1,
+            first: index === 0,
+          }"
+        >
+          <img
+            :src="getImageUrl(image.url)"
+            class="user-image"
+            :key="image.url"
+          />
+        </div>
+      </div>
+      <div v-else class="no-photo_message">
+        У {{ props.user.name }} нет фото
+      </div>
     </div>
-    <div v-else class="no-photo_message">У {{ props.user.name }} нет фото</div>
-    <div>{{ props.user.name }}</div>
+    <SkLoader v-if="props.loading" />
   </div>
   <TransitionGroup name="modal" v-if="isModal" key="0">
     <SkPopup @close-popup="isModal = false">
       <template #modal>
         <h3 class="modal_title">Добавление фотографий</h3>
         <div class="modal_image_container">
-          <div class="separator"></div>
+          <q-separator size="2px" q-pa="sm" />
+
           <img class="modal_image" :src="getImageUrl(imageUrl)" />
           <SkInput
             class="extra-info"
@@ -61,7 +76,8 @@
             :model-value="photoDescription"
             @update:model-value="(newValue) => (photoDescription = newValue)"
           />
-          <div class="separator"></div>
+          <q-separator size="2px" q-pa="sm" />
+
         </div>
         <SkButton class="publish" @click="publish" label="Опубликовать" />
       </template>
@@ -75,6 +91,7 @@ import { useImageGetter } from "@/composables/utilities";
 import SkButton from "../UIcomponents/SkButton.vue";
 import SkPopup from "../UIcomponents/SkPopup.vue";
 import SkInput from "../UIcomponents/SkInput.vue";
+import SkLoader from "./SkLoader.vue";
 import type { UserDB, Photo } from "env";
 import { usePhotoStore } from "../stores/photo";
 import { db } from "../../firebase";
@@ -92,20 +109,19 @@ const photoStore = usePhotoStore();
 const isModal = ref<boolean>(false);
 const photoDescription = ref<string>("");
 
+photoStore.loadPhotos();
 const props = withDefaults(
   defineProps<{
     readonly?: boolean;
     user: UserDB;
+    loading?: boolean;
   }>(),
   {
+    loading: true,
     readonly: false,
   }
 );
 
-setTimeout(() => {
-  loading.value = false;
-}, 1000);
-const loading = ref<boolean>(true);
 const { getImageUrl } = useImageGetter();
 const imageUrl = ref<string>("");
 const image = ref<string>("");
@@ -137,17 +153,6 @@ async function publish() {
     url: imageUrl.value,
     description: photoDescription.value,
   };
-  let docId = ref<string>("");
-  const querySnapshot = await getDocs(collection(db, "users"));
-  querySnapshot.forEach((doc) => {
-    const docEmail = doc.data().email;
-    if (docEmail === authStore.user.email) {
-      docId.value = doc.id;
-    }
-  });
-  await updateDoc(doc(db, "users", docId.value), {
-    posts: arrayUnion(photo),
-  });
   photoStore.setPhoto(photo);
 
   isModal.value = false;
@@ -155,10 +160,23 @@ async function publish() {
 </script>
 
 <style scoped>
+.loader-wrapper {
+  width: 100%;
+}
+
+.btns {
+  justify-content: center;
+}
 .content {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100px;
+}
+
+.images-wrapper {
+  width: 100%;
 }
 
 .images {
@@ -178,7 +196,7 @@ async function publish() {
 
 .user-image {
   width: 100%;
-  height: 280px;
+  height: 200px;
   cursor: pointer;
   object-fit: cover;
 }
@@ -200,9 +218,10 @@ async function publish() {
 }
 
 .no-photo_message {
-  font-size: 17px;
+  font-size: 20px;
   color: #9f9f9f;
-  margin: 10px 0;
+  margin: 20px 0;
+  text-align: center;
 }
 
 .btns {

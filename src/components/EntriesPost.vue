@@ -53,7 +53,7 @@
             />
           </template>
         </q-input>
-        <div class="comments">
+        <div class="comments" v-if="isComments">
           <div class="comment" v-for="comment in post.comments">
             <div class="comment_photo_container">
               <img
@@ -101,7 +101,7 @@
             <i class="fa-solid fa-thumbs-up manage-item_icon"></i>
             <div class="manage-item_text">{{ post.likes }}</div>
           </div>
-          <div class="manage_item">
+          <div class="manage_item" @click="viewComments">
             <i class="fa-solid fa-comment manage-item_icon"></i>
             <div class="manage-item_text">{{ post.comments.length }}</div>
           </div>
@@ -134,14 +134,31 @@
               dense
               flat
               icon="send"
-              @click="commentPost(post.id, index)"
+              @click="commentPost(post.id, index, props.user.email)"
             />
           </template>
         </q-input>
+        <div class="comments" v-if="isComments">
+          <div class="comment" v-for="comment in post.comments">
+            <div class="comment_photo_container">
+              <img
+                class="comment_photo"
+                :src="getImageUrl(comment.authorProfilePhoto)"
+              />
+            </div>
+            <div class="comment_text">
+              <div class="comment_author">{{ comment.author }}</div>
+
+              <div class="comment_message">{{ comment.comment }}</div>
+            </div>
+          </div>
+        </div>
         <div class="separator"></div>
       </div>
     </div>
-    <div class="no-posts_message" v-else>У вас нет постов</div>
+    <div class="no-posts_message" v-else>
+      У {{ props.user.name }} нет постов
+    </div>
   </div>
 </template>
 
@@ -154,8 +171,8 @@ import { usePostStore } from "@/stores/post";
 import { useAuthStore } from "@/stores/auth";
 import type { Post, UserDB, Comment } from "env";
 
+const isComments = ref<boolean>(false);
 const commentsModels: Array<string> = reactive([]);
-
 const props = withDefaults(
   defineProps<{
     readonly?: boolean;
@@ -165,6 +182,7 @@ const props = withDefaults(
     readonly: false,
   }
 );
+console.log(props.user);
 const authStore = useAuthStore();
 const router = useRouter();
 const postStore = usePostStore();
@@ -179,24 +197,30 @@ async function likePost(post: Post, index: number) {
   postStore.likePost(post, index);
 }
 
-function commentPost(id: string, index: number) {
+function commentPost(id: string, index: number, userEmail?: string) {
   const comment: Comment = {
     authorProfilePhoto: authStore.user.photoURL,
     author: authStore.user.displayName,
     comment: commentsModels[index],
   };
-  postStore.commentPost(id, comment);
+  if (userEmail) {
+    postStore.commentPost(id, comment, userEmail);
+  } else {
+    postStore.commentPost(id, comment);
+  }
   commentsModels[index] = "";
 }
 
-function viewComments() {}
+function viewComments() {
+  isComments.value = !isComments.value;
+}
 </script>
 
 <style scoped>
 .no-posts_message {
-  font-size: 17px;
+  font-size: 20px;
   color: #9f9f9f;
-  margin: 10px 0;
+  margin: 20px 0;
   text-align: center;
 }
 .btn {

@@ -7,7 +7,7 @@
           <label class="label" for="name">Имя</label>
           <SkInput
             :modelValue="name"
-            @update:modelValue="(newValue) => (name = newValue)"
+            @update:modelValue="(newValue) => (name = newValue as string)"
             placeholder="Имя"
             class="input"
             :padding="'10px 30px'"
@@ -16,7 +16,7 @@
           <label class="label" for="email">Email</label>
           <SkInput
             :modelValue="email"
-            @update:modelValue="(newValue) => (email = newValue)"
+            @update:modelValue="(newValue) => (email = newValue as string)"
             placeholder="Email"
             class="input"
             :padding="'10px 30px'"
@@ -25,7 +25,7 @@
           <label class="label" for="name">Пароль</label>
           <SkInput
             :modelValue="password"
-            @update:modelValue="(newValue) => (password = newValue)"
+            @update:modelValue="(newValue) => (password = newValue as string)"
             placeholder="Пароль"
             class="input"
             :icon="isPwt ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"
@@ -37,7 +37,7 @@
           <label class="label" for="profile photo">Фото профиля</label>
           <SkInput
             :modelValue="photoURL"
-            @update:modelValue="(newValue) => (photoURL = newValue)"
+            @update:modelValue="(newValue) => (photoURL = newValue as string)"
             placeholder="Фото профиля"
             class="input"
             :type="'text'"
@@ -78,7 +78,7 @@
           <label class="label" for="name">Город</label>
           <SkInput
             :modelValue="city"
-            @update:modelValue="(newValue) => (city = newValue)"
+            @update:modelValue="(newValue) => (city = newValue as string)"
             placeholder="Родной город"
             class="input"
             :padding="'10px 30px'"

@@ -27,7 +27,7 @@ const sidebarItems: Array<sidebarItem> = [
     icon: " fa-solid fa-users",
     title: "Друзья",
     id: uuidv4(),
-    route: "/profile",
+    route: "/friends",
   },
   {
     icon: " fa-solid fa-newspaper",

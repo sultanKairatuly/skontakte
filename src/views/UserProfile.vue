@@ -9,7 +9,11 @@
     />
     <div class="profile_bottom">
       <ProfileEntries class="entries" :user="({} as UserDB)" />
-      <UserInformation class="user_information" />
+      <UserInformation
+        :loading="false"
+        :user="({} as UserDB)"
+        class="user_information"
+      />
     </div>
   </div>
   <Teleport to=".app" v-if="isPopup">
@@ -22,7 +26,7 @@
         <SkInput
           class="popup_input"
           :modelValue="photoURL"
-          @update:modelValue="(newValue) => (photoURL = newValue)"
+          @update:modelValue="(newValue) => (photoURL = newValue as string)"
           :type="'text'"
           :placeholder="'Введите URL фото'"
         />
@@ -39,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import SkInput from "@/UIcomponents/SkInput.vue";
 import SkPopup from "@/UIcomponents/SkPopup.vue";
 import SkButton from "@/UIcomponents/SkButton.vue";
@@ -47,7 +51,7 @@ import ProfileBanner from "@/components/ProfileBanner.vue";
 import { useAuthStore } from "../stores/auth";
 import ProfileEntries from "../components/ProfileEntries.vue";
 import UserInformation from "../components/UserInformation.vue";
-import type { UserDB } from "env";
+import type { User, UserDB } from "env";
 import {
   getDocs,
   doc,
@@ -142,6 +146,10 @@ function closePopup(): void {
   font-weight: 600;
 }
 
+.user_profile {
+  width: 40%;
+}
+
 .confirm {
   display: block;
   margin: 0px auto;
@@ -158,9 +166,5 @@ function closePopup(): void {
 .profile_bottom {
   display: flex;
   justify-content: space-between;
-}
-
-.user_information {
-  width: 40%;
 }
 </style>

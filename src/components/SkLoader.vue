@@ -1,25 +1,28 @@
 <template>
-    <div class="loader_container">
-        <div class="lds-ring loader"><div></div><div></div><div></div><div></div></div>
+  <div class="loader_container">
+    <div class="lds-ring loader">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
+  </div>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
-.loader_container{
-    background-color: #fff;
-    position: absolute;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.loader_container {
+  background-color: #fff;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .lds-ring {
   display: inline-block;
@@ -34,10 +37,10 @@
   width: 44px;
   height: 44px;
   margin: 8px;
-  border: 4px solid #437BBA;
+  border: 4px solid #437bba;
   border-radius: 50%;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #437BBA transparent transparent transparent;
+  border-color: #437bba transparent transparent transparent;
 }
 .lds-ring div:nth-child(1) {
   animation-delay: -0.45s;
@@ -56,5 +59,4 @@
     transform: rotate(360deg);
   }
 }
-
 </style>

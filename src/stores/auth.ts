@@ -6,14 +6,17 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { collection, addDoc, arrayUnion } from "firebase/firestore";
+import {  } from "firebase/firestore";
 import type { Updates, User } from 'env'
 import router from '@/router';
 import {
   getDocs,
   doc,
   updateDoc,
+  collection, addDoc, arrayUnion
 } from "firebase/firestore";
+import type { UserDB, AddedUser } from 'env'
+import { usePhotoStore } from './photo';
 
 
 export const useAuthStore = defineStore('auth', {
@@ -66,6 +69,9 @@ export const useAuthStore = defineStore('auth', {
           city: user.city,
           gender: user.gender,
           birthday: user.birthday,
+          friends: [],
+          friendRequestTo: [],
+          friendRequestFrom: [],
         });
         const querySnapshot = await getDocs(collection(db, "users"));
         querySnapshot.forEach((doc) => {
@@ -85,16 +91,19 @@ export const useAuthStore = defineStore('auth', {
       try {
         await signInWithEmailAndPassword(auth, email, password);
         this.user = auth.currentUser;
-        console.log(this.user.displayName)
+        this.user.friends = [];
         const querySnapshot = await getDocs(collection(db, "users"));
         querySnapshot.forEach((doc) => {
           console.log(doc)
-          if (doc.data().name === this.user.displayName) {
+          if (doc.data().email === this.user.email) {
             this.user.photoURL = doc.data().photoURL;
+            this.user.displayName = doc.data().name;
             this.user.gender = doc.data().gender
             this.user.city = doc.data().city
             this.user.birthday = doc.data().birthday
-            console.log(this.user)
+            this.user.friends = doc.data().friends
+            this.user.friendRequestFrom = doc.data().friendRequestFrom
+            this.user.friendRequestTo = doc.data().friendRequestTo
             localStorage.setItem('posts', JSON.stringify(doc.data().posts))
           }
         });
@@ -116,21 +125,38 @@ export const useAuthStore = defineStore('auth', {
         return;
       }
     },
-    async addFriend(friends: Array<User>){
-      let docId = "";
+    async addFriend(friend: UserDB){
+      let docId1 = "";
+      let docId2 = ""
+      let friendTo: AddedUser = {} as AddedUser
       const querySnapshot = await getDocs(collection(db, "users"));
       querySnapshot.forEach((doc: any) => {
         const docEmail = doc.data().email;
         if (docEmail === this.user.email) {
-          docId = doc.id;
+          docId1 = doc.id;
+        }else if(docEmail === friend.email){
+          docId2 = doc.id
+          friendTo.name = doc.data().name
+          friendTo.photoURL = doc.data().photoURL
+          friendTo.email = doc.data().email
         }
       });
     
-      await updateDoc(doc(db, "users", docId), {
-        friends: friends
+      await updateDoc(doc(db, "users", docId1), {
+        friendRequestTo: arrayUnion(friendTo)
+      });
+
+      const addedUser: AddedUser = {
+        name: this.user.displayName,
+        email: this.user.email,
+        photoURL: this.user.photoURL,
+      }
+      await updateDoc(doc(db, "users", docId2), {
+        friendRequestFrom: arrayUnion(addedUser)
       });
 
 
+      this.user.friends.push(friend)
       localStorage.setItem('user', JSON.stringify(this.user))
     },
     async refreshUser(){
@@ -146,7 +172,6 @@ export const useAuthStore = defineStore('auth', {
 
           localStorage.setItem('user', JSON.stringify(this.user))
           localStorage.setItem('posts', JSON.stringify(this.user.posts))
-          console.log(this.user.posts)
         }
       });
     },
@@ -159,6 +184,8 @@ export const useAuthStore = defineStore('auth', {
       router.push("/login");
     },
     async updateUser(updates: Updates){
+      const photosStore = usePhotoStore()
+      await photosStore.loadPhotos()
       let docId = "";
       const querySnapshot = await getDocs(collection(db, "users"));
       querySnapshot.forEach((doc: any) => {
@@ -167,7 +194,7 @@ export const useAuthStore = defineStore('auth', {
           docId = doc.id;
         }
       });
-    
+      
       await updateDoc(doc(db, "users", docId), {
         name: updates.name,
         gender: updates.gender,
@@ -181,6 +208,69 @@ export const useAuthStore = defineStore('auth', {
       this.user.gender = updates.gender
 
       localStorage.setItem('user', JSON.stringify(this.user))
+    },
+    async acceptFriendRequest(friendEmail: string){
+
+      let docId = "";
+      let docId2 = ''
+      let friend: AddedUser = {} as AddedUser;
+      let friendFrom;
+      let friendTo;
+      let friendFrom2;
+      let friendTo2;
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc: any) => {
+        const docEmail = doc.data().email;
+        if (docEmail === friendEmail) {
+          friend = {
+            email: doc.data().email,
+            name: doc.data().name,
+            photoURL: doc.data().photoURL,
+          }
+          docId2 = doc.id
+          friendFrom2 = doc.data().friendRequestFrom.filter( (item: UserDB) => item.email !== this.user.email)
+          friendTo2 = doc.data().friendRequestFrom.filter( (item: UserDB) => item.email !== this.user.email)
+        }else if(docEmail === this.user.email){
+          docId = doc.id
+          friendFrom = doc.data().friendRequestFrom.filter( (item: UserDB) => item.email !== friendEmail)
+          friendTo = doc.data().friendRequestTo.filter( (item: UserDB) => item.email !== friendEmail)
+        }
+      });
+      await updateDoc(doc(db, "users", docId), {
+        friendRequestFrom: friendFrom,
+        friendRequestTo: friendTo,
+        friends: arrayUnion(friend),
+
+      });
+
+
+      const addedUser: AddedUser = {
+        name: this.user.displayName,
+        email: this.user.email,
+        photoURL: this.user.photoURL,
+      }
+
+      await updateDoc(doc(db, "users", docId2), {
+        friendRequestFrom: friendFrom2,
+        friendRequestTo: friendTo2,
+        friends: arrayUnion(addedUser),
+
+      });
+      this.refreshUser()
+    },
+    async removeFriend(friendEmail: string){
+      this.user.friends = this.user.friends.filter((friend: AddedUser) => friend.email !== friendEmail)
+      let docId = "";
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc: any) => {
+        const docEmail = doc.data().email;
+        if (docEmail === this.user.email) {
+          docId = doc.id
+        }
+      });
+      await updateDoc(doc(db, "users", docId), {
+        friends: this.user.friends
+      });
     }
   }
 }

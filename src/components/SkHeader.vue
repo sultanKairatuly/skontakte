@@ -8,15 +8,19 @@
         type="text"
         placeholder="Поиск"
         v-model="search"
+        @focus="searchUsers"
       />
-      <div class="menu">
+      <div class="menu" v-if="isMenu">
         <div
           class="user"
           v-for="user in users"
           :key="user.email"
           @click="viewProfile(user.email)"
         >
-          {{ user.name }}
+          <div class="user_avatar_container">
+            <img class="user_avatar" :src="user.photoURL" />
+          </div>
+          <div class="user_name">{{ user.name }}</div>
         </div>
       </div>
       <div
@@ -48,7 +52,7 @@ import type { profileListItem, UserDB } from "env";
 import ProfileDropdown from "./ProfileDropdown.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "@/stores/auth";
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import {
   getDocs,
   doc,
@@ -58,7 +62,17 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useRouter } from "vue-router";
+import { useImageGetter } from "@/composables/utilities";
 
+document.addEventListener("click", (e: Event) => {
+  const target = e.target as HTMLElement;
+  if (!target?.classList.contains("search")) {
+    isMenu.value = false;
+  }
+});
+
+const { includes } = useImageGetter();
+const isMenu = ref<boolean>(false);
 const router = useRouter();
 const users: Array<UserDB> = reactive([]);
 const search = ref<string>("");
@@ -84,6 +98,14 @@ const dropdownListItems: Array<profileListItem> = [
     id: uuidv4(),
   },
 ];
+
+watch(users, (nv) => {
+  if (Object.keys(nv).length > 0) {
+    isMenu.value = true;
+  } else {
+    isMenu.value = false;
+  }
+});
 
 function goSettings() {
   console.log("settings");
@@ -115,16 +137,31 @@ function closeProfileDropdown() {
 }
 
 async function searchUsers() {
-  const querySnapshot = await getDocs(collection(db, "users"));
-  users.splice(0);
-  querySnapshot.forEach((doc: any) => {
-    if (doc.data().name.toLowerCase().includes(search.value.toLowerCase()))
-      users.push(doc.data());
-  });
+  if (search.value === "") {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    users.splice(0);
+    querySnapshot.forEach((doc: any) => {
+      if (includes(doc.data(), store.user.friends, "email")) {
+        users.push(doc.data());
+      }
+    });
+  } else {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    users.splice(0);
+    querySnapshot.forEach((doc: any) => {
+      if (
+        doc.data().name.toLowerCase().startsWith(search.value.toLowerCase()) &&
+        doc.data().email !== store.user.email
+      )
+        users.push(doc.data());
+    });
+  }
 }
 
 function viewProfile(userEmail: string) {
+  isMenu.value = false;
   router.push(`/user/${userEmail}`);
+  search.value = "";
 }
 </script>
 
@@ -136,6 +173,50 @@ function viewProfile(userEmail: string) {
   width: 100%;
   padding: 15px 0;
   z-index: 100;
+}
+
+.user_avatar_container {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+}
+
+.menu {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  background-color: #fff;
+  padding: 15px 0;
+  z-index: 500;
+  display: flex;
+  width: 300px;
+  flex-direction: column;
+  row-gap: 20px;
+  transform: translateX(-50%);
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+}
+
+.user {
+  padding: 5px 15px;
+  display: flex;
+  column-gap: 10px;
+  cursor: pointer;
+  transition: 0.1s ease-in-out;
+}
+
+.user:hover {
+  background-color: #eeeeee;
+}
+.user_avatar {
+  width: 50px;
+  object-fit: cover;
+  height: 50px;
+}
+.user_name {
+  font-size: 18px;
+  color: #2d5a86;
+  font-weight: bold;
 }
 
 .dropdown_menu {

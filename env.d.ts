@@ -1,4 +1,4 @@
-import type { Component } from 'vue'
+import type { ComponentOptions } from 'vue'
 
 
 export type profileListItem = {
@@ -14,8 +14,20 @@ export type Post = {
     id: string,
     likes: number,
     comments: Array<Comment>
- }
+}
 
+export type AddedUser = {
+    name: string,
+    email: string,
+    photoURL: string
+  }
+
+
+export type Tabs = {
+    title: string;
+    component: ComponentOptions;
+    id: string;
+  };
 export type Photo = {
     url: string,
     description?: string
@@ -68,5 +80,9 @@ export type UserDB = {
     posts: Array<Post>,
     news: [],
     articles: [],
-    photos: Array<Photo>
+    photos: Array<Photo>,
+    friends: Array<UserDB>,
+    birthday: string,
+    city: string,
+    gender: string
 }
