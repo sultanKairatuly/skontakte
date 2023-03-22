@@ -9,7 +9,7 @@
         >
           <div class="user_avatar_box">
             <img :src="store.user.photoURL" alt="avatar" class="user_avatar" />
-            <SkLoader v-if="props.isLoading"></SkLoader>
+            <q-skeleton type="circle" v-if="props.isLoading" />
           </div>
           <TransitionGroup name="menu">
             <div class="dropdown_list" v-if="profilePhotoHovered">
@@ -49,8 +49,8 @@
       <div class="user_info">
         <div class="user_avatar_wrapper">
           <div class="user_avatar_box">
-            <img :src="props.user.photoURL" alt="avatar" class="user_avatar" />
-            <SkLoader v-if="props.isLoading || props.loading"></SkLoader>
+            <q-skeleton class="skeleton" type="circle" v-if="props.isLoading || props.loading" />
+            <img :src="props.user.photoURL" v-else alt="avatar" class="user_avatar" />
           </div>
         </div>
         <div class="text">
@@ -58,7 +58,7 @@
           <div class="links">
             <div class="link">
               <i class="fa-solid fa-location-dot icon"></i>
-              <div class="link_text">Алматы</div>
+              <div class="link_text">{{ props.user.city }}</div>
             </div>
             <div class="link">
               <i class="fa-solid fa-circle-info icon"></i>
@@ -74,11 +74,12 @@
           label="Добавить в друзья"
         />
         <SkButton
-          v-else
+          v-if="!includes(props.user, store.user.friendRequestFrom, 'email')"
           @click="showCancelFriendRequestPopup"
           icon="check"
           label="Заявка отправлена"
         />
+        <SkButton v-else label="Написать сообщение"/>
       </div>
     </div>
     <Teleport to=".app" v-if="isDetailsPopup">
@@ -159,7 +160,6 @@
 
 <script setup lang="ts">
 import SkButton from "../UIcomponents/SkButton.vue";
-import SkLoader from "./SkLoader.vue";
 import SkPopup from "../UIcomponents/SkPopup.vue";
 import { useAuthStore } from "@/stores/auth";
 import { ref } from "vue";
@@ -169,8 +169,6 @@ import {
   doc,
   updateDoc,
   collection,
-  addDoc,
-  arrayUnion,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useImageGetter } from "../composables/utilities";
@@ -390,6 +388,14 @@ function showCancelFriendRequestPopup() {
   justify-content: center;
   column-gap: 20px;
 }
+
+.skeleton{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 .details_title {
   font-size: 30px;
   background-color: #f0f4f8;
@@ -449,7 +455,7 @@ function showCancelFriendRequestPopup() {
 
 @media (max-width: 1440px) {
   .banner {
-    height: 450px;
+    height: 300px;
   }
   .user {
     height: 110px;
@@ -460,17 +466,17 @@ function showCancelFriendRequestPopup() {
     column-gap: 25px;
   }
   .user_avatar_wrapper {
-    width: 160px;
-    height: 160px;
+    width: 120px;
+    height: 120px;
   }
 
   .user_avatar_box {
-    width: 160px;
-    height: 160px;
+    width: 120px;
+    height: 120px;
   }
   .user_avatar {
-    width: 160px;
-    height: 160px;
+    width: 120px;
+    height: 120px;
   }
   .user_name {
     font-size: 24px;
@@ -492,13 +498,13 @@ function showCancelFriendRequestPopup() {
   }
 
   .dropdown_list {
-    width: 180px;
+    width: 130px;
     padding: 3px;
   }
 
   .dropdown_list-item {
-    font-size: 18px;
-    padding: 12px;
+    font-size: 16px;
+    padding: 5px;
   }
 }
 </style>

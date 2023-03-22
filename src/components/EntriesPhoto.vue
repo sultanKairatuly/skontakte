@@ -74,7 +74,7 @@
             :padding="'5px 20px'"
             :font-size="'18px'"
             :model-value="photoDescription"
-            @update:model-value="(newValue) => (photoDescription = newValue)"
+            @update:model-value="(newValue) => (photoDescription = newValue as string)"
           />
           <q-separator size="2px" q-pa="sm" />
 
@@ -94,14 +94,6 @@ import SkInput from "../UIcomponents/SkInput.vue";
 import SkLoader from "./SkLoader.vue";
 import type { UserDB, Photo } from "env";
 import { usePhotoStore } from "../stores/photo";
-import { db } from "../../firebase";
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  arrayUnion,
-} from "firebase/firestore";
 import { useAuthStore } from "../stores/auth";
 
 const authStore = useAuthStore();

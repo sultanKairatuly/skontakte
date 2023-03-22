@@ -100,27 +100,29 @@ function openUserProfile() {
 
 @media (max-width: 1440px) {
   .dropdown_menu {
-    width: 250px;
-    padding: 15px;
+    width: 200px;
+    padding: 10px;
   }
 
   .dropdown_menu_item {
-    padding: 10px 25px;
-    font-size: 18px;
+    padding: 5px 15px;
+    font-size: 16px;
   }
 
   .user_avatar_container {
-    width: 42px;
+    width: 40%;
     height: 42px;
   }
 
   .user_avatar {
-    width: 42px;
+    width: 100%;
     height: 42px;
+    object-fit: cover;
   }
 
   .profile {
     padding: 10px 22px;
+    justify-content: space-between;
   }
 }
 </style>

@@ -67,11 +67,7 @@ function changesSaved() {
   padding: 125px 0;
 }
 
-@media (max-width: 1440px) {
-  .container {
-    width: 65%;
-  }
-}
+
 
 .savedMessage-enter-active,
 .savedMessage-leave-active {
@@ -81,5 +77,16 @@ function changesSaved() {
 .savedMessage-leave-to {
   opacity: 0;
   transform: translateX(30px);
+}
+
+@media (max-width: 1440px) {
+  .container {
+    width: 65%;
+  }
+
+  .app_layout {
+    max-width: 1450px;
+    padding: 65px 0;
+}
 }
 </style>

@@ -40,7 +40,7 @@ function updateModel(e: Event) {
 
 <style scoped>
 .select {
-  padding: 10px;
+  padding: 5px;
   border: 1px solid #edeef0;
   outline: none;
   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;

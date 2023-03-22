@@ -115,7 +115,7 @@
         >
           <template v-slot:before>
             <q-avatar>
-              <img :src="getImageUrl(authStore.user.photoURL)" />
+              <img class="q-avatar" :src="getImageUrl(authStore.user.photoURL)" />
             </q-avatar>
           </template>
 
@@ -253,6 +253,12 @@ function viewComments() {
   font-size: 22px;
   margin-bottom: 20px;
   font-weight: 500;
+}
+
+.q-avatar{
+  object-fit: cover;
+  width: 30px;
+  height: 30px;
 }
 
 .post_body {

@@ -55,7 +55,7 @@
               />
             </div>
             <div class="friend_name">
-              {{ friend.name }}
+              {{ friend.name.split(' ')[0] }}
             </div>
           </div>
         </div>

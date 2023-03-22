@@ -43,11 +43,9 @@ export const useAuthStore = defineStore('auth', {
           auth,
           email,
           password,
-
         );
         await updateProfile(userCredentilas.user, {
           displayName: name,
-          photoURL: photoURL || 'https://images.are.na/eyJidWNrZXQiOiJhcmVuYV9pbWFnZXMiLCJrZXkiOiI4MDQwOTc0L29yaWdpbmFsX2ZmNGYxZjQzZDdiNzJjYzMxZDJlYjViMDgyN2ZmMWFjLnBuZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6MTIwMCwiaGVpZ2h0IjoxMjAwLCJmaXQiOiJpbnNpZGUiLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9LCJ3ZWJwIjp7InF1YWxpdHkiOjkwfSwianBlZyI6eyJxdWFsaXR5Ijo5MH0sInJvdGF0ZSI6bnVsbH19?bc=0',
         });
         
         this.user = {
@@ -55,7 +53,8 @@ export const useAuthStore = defineStore('auth', {
           city: user.city,
           gender: user.gender,
           birthday: user.birthday,
-          friends: user.friends
+          friends: user.friends,
+          photoURL: photoURL,
         }
         localStorage.setItem("user", JSON.stringify(this.user));
         await addDoc(collection(db, "users"), {
@@ -85,7 +84,7 @@ export const useAuthStore = defineStore('auth', {
         console.log(e);
       }
     },
-    async loginUser(payload: Omit<User, "name" | "photoURL" | "city" | "gender" | "birthday">) {
+    async loginUser(payload: { password: string, email: string }) {
       const { email, password } = payload;
       
       try {

@@ -37,7 +37,7 @@
   width: 44px;
   height: 44px;
   margin: 8px;
-  border: 4px solid #437bba;
+  border: 3px solid #437bba;
   border-radius: 50%;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
   border-color: #437bba transparent transparent transparent;

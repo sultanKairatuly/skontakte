@@ -1,4 +1,4 @@
-import type { ComponentOptions } from 'vue'
+import type { ComponentOptions, DefineComponent, Component } from 'vue'
 
 
 export type profileListItem = {
@@ -22,16 +22,25 @@ export type AddedUser = {
     photoURL: string
   }
 
+export type stringMonthSignature = {
+    [a: string]: number;
+  };
+
 
 export type Tabs = {
     title: string;
-    component: ComponentOptions;
+    component: Component;
     id: string;
   };
 export type Photo = {
     url: string,
     description?: string
 }
+
+export type MonthData = {
+    name: string,
+    days: number
+  }
 
 export type sidebarItem = Omit<profileListItem, 'action'> & { route: string }
 export type entriesNavItem = Omit<profileListItem, 'action'> & { component: Component }

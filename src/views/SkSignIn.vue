@@ -1,18 +1,19 @@
 <template>
   <div class="container">
+    <SkLoader v-if="loading" />
     <div class="content">
       <div class="title">Вход Skontakte</div>
       <SkForm class="form">
         <template #inputs>
           <SkInput
             :modelValue="email"
-            @update:modelValue="(newValue) => (email = newValue)"
+            @update:modelValue="(newValue) => (email = newValue as string)"
             placeholder="Email пользователя"
             class="input"
           />
           <SkInput
             :modelValue="password"
-            @update:modelValue="(newValue) => (password = newValue)"
+            @update:modelValue="(newValue) => (password = newValue as string)"
             placeholder="Пароль"
             class="input"
             :icon="isPwt ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"
@@ -40,14 +41,16 @@ import SkInput from "../UIcomponents/SkInput.vue";
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 
+
+
 const store = useAuthStore();
+const loading = ref<boolean>(false)
 const isPwt = ref<boolean>(false);
 const email = ref<string>("");
 const password = ref<string>("");
 
 function login(e: Event) {
   e.preventDefault();
-  console.log("loging...");
   const user = {
     email: email.value,
     password: password.value,

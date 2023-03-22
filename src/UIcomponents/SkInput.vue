@@ -1,17 +1,5 @@
 <template>
   <div class="box">
-    <!-- <input
-      class="input_item"
-      :value="props.modelValue"
-      @input="updateModel"
-      :placeholder="props.placeholder"
-      :type="props.type"
-      :style="{
-        padding: props.padding,
-        fontSize: props.fontSize,
-      }"
-    />
-    <i class="icon" :class="props.icon" @click="$emit('iconClicked')"></i> -->
     <q-input
       :modelValue="props.modelValue"
       @update:model-value="updateModel"
@@ -20,6 +8,8 @@
       outlined
       :placeholder="props.placeholder"
       :type="props.type"
+      class="q-pa-sm"
+      :rules="props.rules"
     >
       <template v-slot:append>
         <q-icon class="icon" @click="$emit('iconClicked')" :name="icon" />
@@ -52,6 +42,7 @@ const props = withDefaults(
     type?: InputTypes;
     icon?: string;
     label?: string;
+    rules?: [(...args: any[]) => any];
   }>(),
   {
     type: "text",

@@ -31,9 +31,9 @@ const sidebarItems: Array<sidebarItem> = [
   },
   {
     icon: " fa-solid fa-newspaper",
-    title: "Новости",
+    title: "Статьи",
     id: uuidv4(),
-    route: "/profile",
+    route: "/articles",
   },
   {
     icon: " fa-solid fa-message",
@@ -78,20 +78,21 @@ const sidebarItems: Array<sidebarItem> = [
 
 @media (max-width: 1440px) {
   .sidebar {
-  padding: 15px;
+  padding: 10px;
+  width: 10%;
 }
 
 .sidebar_item {
-  column-gap: 10px;
-  padding: 5px;
+  column-gap: 5px;
+  padding: 3px;
 }
 
 .sidebar_item-icon {
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .sidebar_item-title {
-  font-size: 16px;
+  font-size: 14px;
 }
 }
 </style>

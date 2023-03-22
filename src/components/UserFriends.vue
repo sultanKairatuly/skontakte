@@ -32,7 +32,7 @@
               <SkButton class="friend_item_btn" label="Написать сообщение" />
             </div>
           </div>
-          <q-btn-dropdown class="dropdown" dropdown-icon="fa-solid fa-ellipsis">
+          <q-btn-dropdown class="q-pa-sm dropdown" dropdown-icon="fa-solid fa-ellipsis">
             <q-list>
               <q-item
                 clickable
@@ -44,7 +44,7 @@
                 </q-item-section>
               </q-item>
 
-              <q-item clickable v-close-popup @click="showFriends">
+              <q-item clickable v-close-popup @click="showFriends(friend)">
                 <q-item-section>
                   <q-item-label>Посмотреть друзей</q-item-label>
                 </q-item-section>
@@ -69,16 +69,18 @@
 
 <script setup lang="ts">
 import { useAuthStore } from "@/stores/auth";
-import type { AddedUser } from "env";
+import type { AddedUser, UserDB } from "env";
 import { useImageGetter } from "../composables/utilities";
 import SkButton from "../UIcomponents/SkButton.vue";
 import SkInput from "../UIcomponents/SkInput.vue";
 import { ref, reactive, computed } from "vue";
 import SkLoader from "../components/SkLoader.vue";
+import router from "@/router";
 
 const props = defineProps<{
   loading?: boolean;
-  friends: Array<AddedUser>;
+  user?: UserDB;
+  friends: Array<AddedUser>
 }>();
 const authStore = useAuthStore();
 const friends = computed(() => {
@@ -94,7 +96,9 @@ function removeFriend(friendEmail: string) {
   authStore.removeFriend(friendEmail);
 }
 
-function showFriends() {}
+function showFriends(friend: AddedUser) {
+  router.push(`/friends/${friend.email}`)
+}
 </script>
 
 <style scoped>
@@ -194,5 +198,55 @@ function showFriends() {}
 .friends-leave-to {
   opacity: 0;
   transform: translateX(30px);
+}
+
+@media (max-width: 1440px){
+  .friends {
+  padding: 8px 18px;
+  }
+.title {
+  font-size: 18px;
+}
+.friend {
+  padding: 12px 0;
+  column-gap: 17px;
+}
+
+.friend_item_avatar_container {
+  width: 105px;
+  height: 105px;
+}
+.friend_item_avatar {
+  width: 105px;
+  height: 105px;
+  object-fit: cover;
+}
+.friend_item_name {
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.request_item_btns,
+.friend_item_btns {
+  display: flex;
+  column-gap: 8px;
+}
+
+.friends {
+  margin-top: 20px;
+}
+.friends_header {
+  padding: 8px 0;
+  margin: 3px 0;
+}
+.no-friends-message {
+  margin: 17px 0;
+  font-size: 18px;
+}
+
+.btn-center {
+  margin: 17px auto;
+}
+
 }
 </style>

@@ -55,10 +55,7 @@ import { useAuthStore } from "@/stores/auth";
 import { ref, reactive, watch } from "vue";
 import {
   getDocs,
-  doc,
-  updateDoc,
   collection,
-  arrayUnion,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useRouter } from "vue-router";
@@ -288,7 +285,7 @@ function viewProfile(userEmail: string) {
 
 @media (max-width: 1440px) {
   .header {
-    padding: 10px 0;
+    padding: 2px 0;
   }
 
   .dropdown_menu {
@@ -306,10 +303,10 @@ function viewProfile(userEmail: string) {
     justify-content: space-between;
   }
   .header__logo {
-    font-size: 25px;
+    font-size: 23px;
   }
   .search {
-    padding: 5px 30px;
+    padding: 3px 30px;
     font-size: 18px;
     background-size: 16px 16px;
   }
@@ -333,6 +330,7 @@ function viewProfile(userEmail: string) {
   .user {
     align-items: center;
     display: flex;
+    padding: 2px;
     column-gap: 15px;
   }
   .avatar_wrapper {

@@ -1,10 +1,9 @@
 <template>
   <q-btn
     color="#e5ebf1"
-    q-pa="md"
     text-color="#346bb4"
     :label="props.label"
-    class="btn"
+    class="btn q-pa-sm text-body2"
     :icon="props.icon"
   />
 </template>

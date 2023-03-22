@@ -1,15 +1,20 @@
 <template>
   <div class="container">
-    <KeepAlive>
+    <div class="component loader_wrapper" v-if="loading">
+            <SkLoader />
+        </div>
+    <KeepAlive v-else>
       <component
         class="component"
         :friends="authStore.user.friends"
         :is="activeComponent"
+        :friend-request-from="authStore.user.friendRequestFrom"
       ></component>
     </KeepAlive>
     <FriendTabs
       :tabs="tabs"
       :badges="badges"
+      class="tabs"
       @changeActiveComponent="changeActiveComponent"
     />
   </div>
@@ -20,12 +25,13 @@ import UserFriends from "../components/UserFriends.vue";
 import UserFriendRequests from "../components/UserFriendRequests.vue";
 import FriendTabs from "../components/FriendsTabs.vue";
 import { v4 as uuidv4 } from "uuid";
-import type { ComponentOptions } from "vue";
-import { shallowRef, computed } from "vue";
+import type { ComponentOptions, Component } from "vue";
+import { shallowRef, computed, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import type { Tabs } from "env";
+import SkLoader from '../components/SkLoader.vue'
 const authStore = useAuthStore();
-
+const loading = ref<boolean>(false)
 const tabs: Array<Tabs> = [
   {
     title: "Мои Друзья",
@@ -44,7 +50,7 @@ const badges: Array<number> = [
   authStore.user.friendRequestFrom.length,
 ];
 
-let activeComponent = shallowRef<ComponentOptions>(UserFriends);
+let activeComponent = shallowRef<Component>(UserFriends);
 const componentName = computed(() => {
   if (activeComponent.value.__file) {
     let matches = activeComponent.value.__file.match(/\/\w+\.vue/);
@@ -76,5 +82,17 @@ function changeActiveComponent(component: ComponentOptions) {
 
 .friends {
   margin: 0;
+}
+
+.loader_wrapper{
+  position: relative;
+  background-color: #fff;
+}
+
+
+@media (max-width: 1440px){
+  .component {
+    width: 68%;
+  }
 }
 </style>
