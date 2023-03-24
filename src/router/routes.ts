@@ -65,7 +65,36 @@ const routes:   RouteRecordRaw[]  = [
     {
         path: "/friends/:email",
         name: "FriendsWithProps",
-        component: () => import('../views/ViewFriendsPage.vue')
+        component: () => import('../views/ViewFriendsPage.vue'),
+        meta: {
+            requiresAuth: true
+        },
+    },
+    {
+        path: "/articles",
+        name: "Articles",
+        component: () => import('../views/ArticlesPage.vue'),
+        meta: {
+            requiresAuth: true
+        },
+    },
+    {
+        path: "/my-articles",
+        name: "User Articles",
+        component: () => import('../views/ArticlesPage.vue'),
+        meta: {
+            requiresAuth: true
+        },
+    },
+    {
+        path: "/:pathMatch(.*)*",
+        name:"Not Found",
+        component: () => import('../views/NotFound.vue')
+    },
+    {
+        path: '/chats',
+        component: () => import('../views/ChatsPage.vue'),
+        name: 'Chats'
     }
 ]
 

@@ -125,16 +125,6 @@
                 </div>
               </div>
             </div>
-            <div class="general_item">
-              <div class="general_item_amount"></div>
-              <div class="general_item_title"></div>
-              <div class="general_item_images"></div>
-            </div>
-            <div class="general_item">
-              <div class="general_item_amount"></div>
-              <div class="general_item_title"></div>
-              <div class="general_item_images"></div>
-            </div>
           </div>
         </template>
       </SkPopup>
@@ -164,20 +154,12 @@ import SkPopup from "../UIcomponents/SkPopup.vue";
 import { useAuthStore } from "@/stores/auth";
 import { ref } from "vue";
 import type { UserDB } from "env";
-import {
-  getDocs,
-  doc,
-  updateDoc,
-  collection,
-} from "firebase/firestore";
-import { db } from "../../firebase";
 import { useImageGetter } from "../composables/utilities";
 
-const EMAIL: string = "email"
 const isCancelFriendRequestPopup = ref<boolean>(false);
 const isDetailsPopup = ref<boolean>(false);
 const profilePhotoHovered = ref<boolean>(false);
-const { includes } = useImageGetter();
+const { includes, changeProfilePhoto } = useImageGetter();
 const defaultPhotoURL =
   "https://images.are.na/eyJidWNrZXQiOiJhcmVuYV9pbWFnZXMiLCJrZXkiOiI4MDQwOTc0L29yaWdpbmFsX2ZmNGYxZjQzZDdiNzJjYzMxZDJlYjViMDgyN2ZmMWFjLnBuZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6MTIwMCwiaGVpZ2h0IjoxMjAwLCJmaXQiOiJpbnNpZGUiLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9LCJ3ZWJwIjp7InF1YWxpdHkiOjkwfSwianBlZyI6eyJxdWFsaXR5Ijo5MH0sInJvdGF0ZSI6bnVsbH19?bc=0";
 const store = useAuthStore();
@@ -198,43 +180,6 @@ const props = withDefaults(
     loading: true,
   }
 );
-
-const imageUrl = ref<string>("");
-const image = ref<string>("");
-function onFilePicked(event: any) {
-  const target = event?.target;
-  if (target) {
-    const files = [target][0].files;
-    let filename = files[0].name;
-    const fileReader = new FileReader();
-    fileReader.addEventListener("load", async () => {
-      imageUrl.value = fileReader.result as string;
-      store.user.photoURL = imageUrl.value;
-      localStorage.setItem("user", JSON.stringify(store.user));
-      let docId = "";
-      const querySnapshot = await getDocs(collection(db, "users"));
-      querySnapshot.forEach((doc: any) => {
-        const docEmail = doc.data().email;
-        if (docEmail === store.user.email) {
-          docId = doc.id;
-        }
-      });
-
-      await updateDoc(doc(db, "users", docId), {
-        photoURL: imageUrl.value,
-      });
-    });
-    fileReader.readAsDataURL(files[0]);
-    image.value = files[0];
-  }
-}
-
-function changeProfilePhoto() {
-  const fileInput = document.createElement("input");
-  fileInput.setAttribute("type", "file");
-  fileInput.click();
-  fileInput.addEventListener("change", onFilePicked);
-}
 
 function deleteProfilePhoto() {
   emit("deleteProfilePhoto");

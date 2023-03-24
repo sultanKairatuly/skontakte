@@ -3,9 +3,14 @@
     color="#e5ebf1"
     text-color="#346bb4"
     :label="props.label"
+    :loading="props.loading"
     class="btn q-pa-sm text-body2"
     :icon="props.icon"
-  />
+   >
+   <template v-slot:loading>
+          <q-spinner-facebook />
+    </template>
+   </q-btn>
 </template>
 
 <script setup lang="ts">
@@ -13,8 +18,10 @@ const props = withDefaults(
   defineProps<{
     label?: string;
     icon?: string;
+    loading?: boolean
   }>(),
   {
+    loading: false,
     label: "Подтвердить",
   }
 );

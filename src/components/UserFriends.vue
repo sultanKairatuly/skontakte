@@ -73,7 +73,7 @@ import type { AddedUser, UserDB } from "env";
 import { useImageGetter } from "../composables/utilities";
 import SkButton from "../UIcomponents/SkButton.vue";
 import SkInput from "../UIcomponents/SkInput.vue";
-import { ref, reactive, computed } from "vue";
+import { ref, computed } from "vue";
 import SkLoader from "../components/SkLoader.vue";
 import router from "@/router";
 

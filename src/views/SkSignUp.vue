@@ -119,7 +119,7 @@ const password = ref<string>("");
 const city = ref<string>("");
 const gender = ref<string>("");
 const birthday: Birthday = reactive({
-  month: "январь",
+  month: "янв",
   day: "1",
   year: "2000",
 });
@@ -188,18 +188,18 @@ const birthMonthOptions: Array<string> = monthData.map((item: MonthData) => item
 
 
 const monthsValue: stringMonthSignature = {
-  январь: 1,
-  февраль: 2,
-  март: 3,
-  апрель: 4,
+  янв: 1,
+  фев: 2,
+  мар: 3,
+  апр: 4,
   май: 5,
-  июнь: 6,
-  июль: 7,
-  август: 8,
-  сентябрь: 9,
-  октябрь: 10,
-  ноябрь: 11,
-  декабрь: 12,
+  июн: 6,
+  июл: 7,
+  авг: 8,
+  сен: 9,
+  окт: 10,
+  ноя: 11,
+  дек: 12,
 };
 
 const monthFormatted = computed(() => {
@@ -226,7 +226,7 @@ const photoUrl = computed(() => {
 
 function register(e: Event): void {
   e.preventDefault();
-  if(name.value === '' || email.value === '' || password.value === '' || birthday.month === '' || birthday.day === '' || birthday.year === ''){
+  if(name.value === '' || email.value === '' || city.value == '' || password.value === '' || birthday.month === '' || birthday.day === '' || birthday.year === ''){
     
     console.log('you are wrong')
     return;
@@ -241,6 +241,7 @@ function register(e: Event): void {
     city: city.value,
     gender: gender.value,
     friends: [],
+    chats: []
   };
   store.registerUser(user);
   name.value = "";

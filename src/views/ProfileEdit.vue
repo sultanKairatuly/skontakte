@@ -6,6 +6,7 @@
           class="avatar_container"
           @mouseenter="profilePhotoHovered = true"
           @mouseleave="profilePhotoHovered = false"
+          @click="changeProfilePhoto"
         >
           <img :src="store.user.photoURL" class="avatar" alt="avatar" />
           <div class="bg" v-if="profilePhotoHovered">
@@ -70,7 +71,9 @@ import SkSelect from "../UIcomponents/SkSelect.vue";
 import { ref, reactive, computed } from "vue";
 import type { Birthday,  Months, Updates, MonthData, stringMonthSignature } from "env";
 import { useRouter } from 'vue-router'
+import { useImageGetter } from '../composables/utilities'
 
+const { changeProfilePhoto } = useImageGetter()
 const router = useRouter()
 const emit = defineEmits<{
   (e: "changesSaved"): void;

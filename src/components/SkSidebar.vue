@@ -39,7 +39,7 @@ const sidebarItems: Array<sidebarItem> = [
     icon: " fa-solid fa-message",
     title: "Мессенджер",
     id: uuidv4(),
-    route: "/profile",
+    route: "/chats",
   },
 ];
 </script>
