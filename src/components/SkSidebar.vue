@@ -78,21 +78,40 @@ const sidebarItems: Array<sidebarItem> = [
 
 @media (max-width: 1440px) {
   .sidebar {
-  padding: 10px;
-  width: 10%;
+    padding: 10px;
+    width: 10%;
+  }
+
+  .sidebar_item {
+    column-gap: 5px;
+    padding: 3px;
+  }
+
+  .sidebar_item-icon {
+    font-size: 16px;
+  }
+
+  .sidebar_item-title {
+    font-size: 14px;
+  }
 }
 
-.sidebar_item {
-  column-gap: 5px;
-  padding: 3px;
-}
+@media (max-width: 1000px) {
+  .sidebar {
+    padding: 10px;
+    width: 15%;
+  }
 
-.sidebar_item-icon {
-  font-size: 16px;
-}
+  .sidebar_item {
+    column-gap: 3px;
+  }
 
-.sidebar_item-title {
-  font-size: 14px;
-}
+  .sidebar_item-icon {
+    font-size: 14px;
+  }
+
+  .sidebar_item-title {
+    font-size: 12px;
+  }
 }
 </style>

@@ -5,19 +5,21 @@
       @click="$emit('changeActiveComponent', tab.component)"
       :key="tab.id"
       :class="{
-        'active-tab': tab.id === props.activeTabId
+        'active-tab': tab.id === props.activeTabId,
       }"
       v-for="(tab, index) in props.tabs"
     >
       {{ tab.title }}
-      <q-badge color="#447BBA" v-if="props.badges" transparent>{{ props?.badges?.[index] }}</q-badge>
+      <q-badge color="#447BBA" v-if="props.badges" transparent>{{
+        props?.badges?.[index]
+      }}</q-badge>
     </div>
   </div>
   <div class="tabs" v-if="props.readonly">
     <div class="banner">
       <div class="user_avatar_container">
         <q-skeleton type="circle" class="skeleton" v-if="props.loading" />
-        <img :src="props.user?.photoURL" v-else class="user_avatar" alt="">
+        <img :src="props.user?.photoURL" v-else class="user_avatar" alt="" />
       </div>
       <h3 class="title">Друзья {{ props.user?.name }}</h3>
     </div>
@@ -28,25 +30,35 @@
       v-for="(tab, index) in props.tabs"
     >
       {{ tab.title }}
-      <q-badge color="#447BBA" v-if="props.badges" transparent>{{ props?.badges?.[index] }}</q-badge>
+      <q-badge color="#447BBA" v-if="props.badges" transparent>{{
+        props?.badges?.[index]
+      }}</q-badge>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Tabs, UserDB } from 'env'
+import type { Component } from "@firebase/component";
+import type { Tabs, UserDB } from "env";
 
-const props = withDefaults(defineProps<{
-  tabs: Array<Tabs>;
-  badges?: Array<number>;
-  readonly: boolean;
-  user?: UserDB;
-  activeTabId?: string;
-  loading: boolean
-}>(), {
-  readonly: false,
-  loading: false
-});
+const props = withDefaults(
+  defineProps<{
+    tabs: Array<Tabs>;
+    badges?: Array<number>;
+    readonly?: boolean;
+    user?: UserDB;
+    activeTabId?: string;
+    loading?: boolean;
+  }>(),
+  {
+    readonly: false,
+    loading: false,
+  }
+);
+
+defineEmits<{
+  (e: "changeActiveComponent", value: Component): void;
+}>();
 </script>
 
 <style scoped>
@@ -78,7 +90,7 @@ const props = withDefaults(defineProps<{
   align-items: center;
 }
 
-.user_avatar_container{
+.user_avatar_container {
   width: 35px;
   position: relative;
   height: 35px;
@@ -86,7 +98,7 @@ const props = withDefaults(defineProps<{
   overflow: hidden;
 }
 
-.title{
+.title {
   font-size: 18px;
   margin-left: 10px;
 }
@@ -102,20 +114,18 @@ const props = withDefaults(defineProps<{
   height: 100%;
 }
 
-.active-tab{
-  color: red
+.active-tab {
+  color: red;
 }
 
 @media (max-width: 1440px) {
-    .tabs {
-      width: 30%;
-    }
+  .tabs {
+    width: 30%;
+  }
 
-    
-    .title{
-      font-size: 14px;
-      margin-left: 10px;
-    }
-
+  .title {
+    font-size: 14px;
+    margin-left: 10px;
+  }
 }
 </style>

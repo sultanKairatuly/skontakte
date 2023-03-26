@@ -89,4 +89,15 @@ function changesSaved() {
     padding: 65px 0;
 }
 }
+
+@media (max-width: 1000px) {
+  .container {
+    width: 80%;
+  }
+
+  .app_layout {
+    max-width: 1450px;
+    padding: 65px 0;
+}
+} 
 </style>

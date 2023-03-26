@@ -53,10 +53,7 @@ import ProfileDropdown from "./ProfileDropdown.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "@/stores/auth";
 import { ref, reactive, watch } from "vue";
-import {
-  getDocs,
-  collection,
-} from "firebase/firestore";
+import { getDocs, collection } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useRouter } from "vue-router";
 import { useImageGetter } from "@/composables/utilities";
@@ -181,7 +178,7 @@ function viewProfile(userEmail: string) {
 
 .menu {
   position: absolute;
-  left: 50%;
+  left: 51.3%;
   top: 100%;
   background-color: #fff;
   padding: 15px 0;
@@ -291,7 +288,7 @@ function viewProfile(userEmail: string) {
   .dropdown_menu {
     position: absolute;
     left: -10px;
-    bottom: -235px;
+    bottom: -195px;
   }
 
   .header__content {

@@ -1,5 +1,5 @@
 <template>
-  <div class="chats_items">
+  <div class="chats_items" v-if="props.chats.length">
     <ChatItem
       @click="$emit('chooseChat', chat)"
       v-for="chat in props.chats"
@@ -9,6 +9,9 @@
         active: chat.id === activeChat.id,
       }"
     />
+  </div>
+  <div class="chats_items">
+    <NoMessage>Чатов нет</NoMessage>
   </div>
 </template>
 
@@ -24,7 +27,9 @@ const props = defineProps<{
 
 <style scoped>
 .chats_items {
+  height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #fff;
 }
 </style>

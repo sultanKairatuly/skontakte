@@ -24,7 +24,7 @@ export const useAuthStore = defineStore("auth", {
   state: () => {
     return {
       user: JSON.parse(localStorage.getItem("user") as string) || {},
-      loading: false,
+      errorMessage: "",
     };
   },
   getters: {},
@@ -106,13 +106,22 @@ export const useAuthStore = defineStore("auth", {
       } catch (e: any) {
         switch (e.code) {
           case "auth/user-not-found":
-            console.log("Пользователь не найден");
+            this.errorMessage = "Пользователь не найден";
+            setTimeout(() => {
+              this.errorMessage = "";
+            }, 2000);
             break;
           case "auth/wrong-password":
-            console.log("Неверный пароль");
+            this.errorMessage = "Неверный пароль";
+            setTimeout(() => {
+              this.errorMessage = "";
+            }, 2000);
             break;
           default:
-            console.log("ПНепредвиденная ошибка");
+            this.errorMessage = "Непредвиденная ошибка";
+            setTimeout(() => {
+              this.errorMessage = "";
+            }, 2000);
             break;
         }
 
@@ -153,7 +162,6 @@ export const useAuthStore = defineStore("auth", {
       localStorage.setItem("user", JSON.stringify(this.user));
     },
     async refreshUser() {
-      let docId = "";
       const querySnapshot = await getDocs(collection(db, "users"));
       querySnapshot.forEach((doc: any) => {
         const docEmail = doc.data().email;

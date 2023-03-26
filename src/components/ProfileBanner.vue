@@ -49,8 +49,17 @@
       <div class="user_info">
         <div class="user_avatar_wrapper">
           <div class="user_avatar_box">
-            <q-skeleton class="skeleton" type="circle" v-if="props.isLoading || props.loading" />
-            <img :src="props.user.photoURL" v-else alt="avatar" class="user_avatar" />
+            <q-skeleton
+              class="skeleton"
+              type="circle"
+              v-if="props.isLoading || props.loading"
+            />
+            <img
+              :src="props.user.photoURL"
+              v-else
+              alt="avatar"
+              class="user_avatar"
+            />
           </div>
         </div>
         <div class="text">
@@ -74,12 +83,15 @@
           label="Добавить в друзья"
         />
         <SkButton
-          v-if="!includes(props.user, store.user.friendRequestFrom, 'email')"
+          v-if="includes(props.user, store.user.friendRequestTo, 'email')"
           @click="showCancelFriendRequestPopup"
           icon="check"
           label="Заявка отправлена"
         />
-        <SkButton v-else label="Написать сообщение"/>
+        <SkButton
+          v-if="includes(props.user, store.user.friends, 'email')"
+          label="Написать сообщение"
+        />
       </div>
     </div>
     <Teleport to=".app" v-if="isDetailsPopup">
@@ -334,7 +346,7 @@ function showCancelFriendRequestPopup() {
   column-gap: 20px;
 }
 
-.skeleton{
+.skeleton {
   width: 100%;
   height: 100%;
   position: absolute;

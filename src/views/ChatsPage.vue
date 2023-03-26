@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import ChatSidebar from "../components/ChatSidebar.vue";
 import ChatContent from "../components/ChatContent.vue";
@@ -26,14 +26,31 @@ import type { Chat } from "env";
 import { getDocs, doc, updateDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase";
 import { uuidv4 } from "@firebase/util";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 const searching = ref<boolean>(false);
 const authStore = useAuthStore();
 const activeChat: Chat = reactive({}) as Chat;
 const searchText = ref<string>("");
 
 authStore.refreshUser();
-
+watch(
+  () => route.query,
+  (params: { email: string } | {}) => {
+    if ("email" in params) {
+      const chat = authStore.user.chats.find(
+        (chat: Chat) => chat.with.email === params.email
+      );
+      Object.assign(activeChat, chat);
+    } else {
+      return;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 function chooseChat(chat: Chat) {
   authStore.refreshUser();
   Object.assign(activeChat, chat);
@@ -93,5 +110,4 @@ async function sendMessage(message: string) {
   display: flex;
   max-height: 100vh;
 }
-
 </style>

@@ -22,6 +22,7 @@
           />
         </template>
         <template #btns>
+          <div class="text-negative q-my-sm">{{ store.errorMessage }}</div>
           <button class="login" @click="login">Войти</button>
         </template>
       </SkForm>
@@ -40,25 +41,34 @@ import SkForm from "../components/SkForm.vue";
 import SkInput from "../UIcomponents/SkInput.vue";
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
-
-
+import SkLoader from "../components/SkLoader.vue";
 
 const store = useAuthStore();
-const loading = ref<boolean>(false)
+const loading = ref<boolean>(false);
 const isPwt = ref<boolean>(false);
 const email = ref<string>("");
 const password = ref<string>("");
 
-function login(e: Event) {
+async function login(e: Event) {
   e.preventDefault();
-  const user = {
-    email: email.value,
-    password: password.value,
-  };
-  store.loginUser(user);
+  if (password.value.length > 0 || email.value.length > 0) {
+    try {
+      loading.value = true;
+      const user = {
+        email: email.value,
+        password: password.value,
+      };
+      await store.loginUser(user);
 
-  email.value = "";
-  password.value = "";
+      email.value = "";
+      password.value = "";
+      loading.value = false;
+    } catch (e) {
+      console.log("result ", e);
+    }
+  } else {
+    return;
+  }
 }
 </script>
 
@@ -130,38 +140,34 @@ function login(e: Event) {
 }
 
 @media (max-width: 1440px) {
-.title {
-  margin: 28px 0;
-  font-size: 28px;
-}
-.content {
-  width: 400px;
-}
+  .title {
+    margin: 28px 0;
+    font-size: 28px;
+  }
+  .content {
+    width: 400px;
+  }
 
-.input {
-  margin: 15px 0;
-  width: 100%;
-}
+  .input {
+    margin: 15px 0;
+    width: 100%;
+  }
 
-.login {
-  font-size: 18px;
-  padding: 10px;
-}
+  .login {
+    font-size: 18px;
+    padding: 10px;
+  }
 
+  .register {
+    font-size: 18px;
+    padding: 10px;
+  }
 
-
-.register {
-  font-size: 18px;
-  padding: 10px;
-}
-
-
-.info {
-  opacity: 0.7;
-  font-size: 15px;
-  text-align: center;
-  margin: 15px 0;
-}
-
+  .info {
+    opacity: 0.7;
+    font-size: 15px;
+    text-align: center;
+    margin: 15px 0;
+  }
 }
 </style>

@@ -24,34 +24,34 @@
         @update:model-value="(newValue) => (name = newValue as string)"
       />
       <label class="label" for="name">Дата рождения</label>
-          <div class="birth">
-            <SkSelect
-              class="select-one"
-              :options="birthDayOptions"
-              :modelValue="birthday.day"
-              @update:modelValue="(newValue) => (birthday.day = newValue)"
-            />
-            <SkSelect
-              class="select-two"
-              :options="birthMonthOptions.map(item => item.slice(0, 3))"
-              :modelValue="birthday.month"
-              @update:modelValue="monthChanged"
-            />
-            <SkSelect
-              class="select-three"
-              :options="birthYearOptions"
-              :modelValue="birthday.year"
-              @update:modelValue="(newValue) => (birthday.year = newValue)"
-            />
-          </div>
-      <label class="label">Пол</label>
+      <div class="birth">
+        <SkSelect
+          class="select-one"
+          :options="birthDayOptions"
+          :modelValue="birthday.day"
+          @update:modelValue="(newValue) => (birthday.day = newValue)"
+        />
+        <SkSelect
+          class="select-two"
+          :options="birthMonthOptions.map((item) => item.slice(0, 3))"
+          :modelValue="birthday.month"
+          @update:modelValue="monthChanged"
+        />
+        <SkSelect
+          class="select-three"
+          :options="birthYearOptions"
+          :modelValue="birthday.year"
+          @update:modelValue="(newValue) => (birthday.year = newValue)"
+        />
+      </div>
+      <label class="label">Родной город</label>
       <SkInput
         padding="8px 20px"
         font-size="19px"
         :model-value="city"
         @update:model-value="(newValue) => (city = newValue as string)"
       />
-      <label class="label">Родной город</label>
+      <label class="label">Пол</label>
       <SkSelect
         class="select"
         :options="['Мужской', 'Женский']"
@@ -69,12 +69,18 @@ import SkButton from "../UIcomponents/SkButton.vue";
 import SkInput from "../UIcomponents/SkInput.vue";
 import SkSelect from "../UIcomponents/SkSelect.vue";
 import { ref, reactive, computed } from "vue";
-import type { Birthday,  Months, Updates, MonthData, stringMonthSignature } from "env";
-import { useRouter } from 'vue-router'
-import { useImageGetter } from '../composables/utilities'
+import type {
+  Birthday,
+  Months,
+  Updates,
+  MonthData,
+  stringMonthSignature,
+} from "env";
+import { useRouter } from "vue-router";
+import { useImageGetter } from "../composables/utilities";
 
-const { changeProfilePhoto } = useImageGetter()
-const router = useRouter()
+const { changeProfilePhoto } = useImageGetter();
+const router = useRouter();
 const emit = defineEmits<{
   (e: "changesSaved"): void;
 }>();
@@ -82,59 +88,60 @@ const store = useAuthStore();
 const birthYearOptions: Array<string> = [];
 const birthDayOptions: Array<string> = reactive([]);
 
-  
-const monthData: Array<MonthData>= [
+const monthData: Array<MonthData> = [
   {
-    name: 'январь',
-    days: 31
+    name: "январь",
+    days: 31,
   },
   {
-    name: 'февраль',
-    days: 28
+    name: "февраль",
+    days: 28,
   },
   {
-    name: 'март',
-    days: 31
+    name: "март",
+    days: 31,
   },
   {
-    name: 'апрель',
-    days: 30
+    name: "апрель",
+    days: 30,
   },
   {
-    name: 'май',
-    days: 31
+    name: "май",
+    days: 31,
   },
   {
-    name: 'июнь',
-    days: 30
+    name: "июнь",
+    days: 30,
   },
   {
-    name: 'июль',
-    days: 31
+    name: "июль",
+    days: 31,
   },
   {
-    name: 'август',
-    days: 31
+    name: "август",
+    days: 31,
   },
   {
-    name: 'сентябрь',
-    days: 30
+    name: "сентябрь",
+    days: 30,
   },
   {
-    name: 'октябрь',
-    days: 31
+    name: "октябрь",
+    days: 31,
   },
   {
-    name: 'ноябрь',
-    days: 30
+    name: "ноябрь",
+    days: 30,
   },
   {
-    name: 'декабрь',
-    days: 31
+    name: "декабрь",
+    days: 31,
   },
-]
+];
 
-const birthMonthOptions: Array<Months> = monthData.map(item => item.name) as Array<Months>
+const birthMonthOptions: Array<Months> = monthData.map(
+  (item) => item.name
+) as Array<Months>;
 
 const monthsValue: stringMonthSignature = {
   январь: 1,
@@ -184,18 +191,15 @@ const birthday: Birthday = reactive({
 });
 const profilePhotoHovered = ref<boolean>(false);
 const birthdayFormatted = computed(() => {
-  let monthKey :number = 0
+  let monthKey: number = 0;
 
-  for(let key in monthsValue){
-    if(key.slice(0, 3) === birthday.month){
-      monthKey = monthsValue[key]
+  for (let key in monthsValue) {
+    if (key.slice(0, 3) === birthday.month) {
+      monthKey = monthsValue[key];
     }
   }
 
-  return `${day}.${
-    +monthKey > 9 ? monthKey : `0${monthKey}`
-  }.${year}`;
-
+  return `${day}.${+monthKey > 9 ? monthKey : `0${monthKey}`}.${year}`;
 });
 
 async function saveEdits() {
@@ -210,17 +214,18 @@ async function saveEdits() {
   router.push("/profile");
 }
 
-function monthChanged(month: string){
-  birthday.month = month
-  const monthDays = monthData.filter(item => item.name.slice(0, 3) === month)[0].days
-  birthDayOptions.splice(0)
-  for(let i = 1; i <= monthDays; i++){
-    birthDayOptions.push(i.toString())
+function monthChanged(month: string) {
+  birthday.month = month;
+  const monthDays = monthData.filter(
+    (item) => item.name.slice(0, 3) === month
+  )[0].days;
+  birthDayOptions.splice(0);
+  for (let i = 1; i <= monthDays; i++) {
+    birthDayOptions.push(i.toString());
   }
-  if(+birthday.day > monthDays){
-    birthday.day = '1'
+  if (+birthday.day > monthDays) {
+    birthday.day = "1";
   }
-
 }
 </script>
 
@@ -285,15 +290,15 @@ function monthChanged(month: string){
   object-fit: cover;
 }
 
-.select-one{
+.select-one {
   width: 55px;
 }
 
-.select-two{
+.select-two {
   width: 65px;
 }
 
-.select-three{
+.select-three {
   width: 80px;
 }
 

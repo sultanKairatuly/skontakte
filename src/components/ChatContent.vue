@@ -14,7 +14,9 @@
       @sendMessage="sendMessage"
     />
   </div>
-  <div class="chats_content" v-else></div>
+  <div class="chats_content" v-else>
+    <NoMessage>Выберите чат</NoMessage>
+  </div>
 </template>
 
 <script setup lang="ts">

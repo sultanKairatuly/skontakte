@@ -9,7 +9,7 @@ import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
 import 'quasar/src/css/index.sass'
 import App from './App.vue'
 import router from './router'
-
+import NoMessage from './UIcomponents/NoMessage.vue'
 import './assets/main.css'
 
 const app = createApp(App)
@@ -19,5 +19,7 @@ app.use(Quasar, {
   })
 app.use(createPinia())
 app.use(router)
+
+app.component('NoMessage', NoMessage)
 
 app.mount('#app')

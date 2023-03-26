@@ -7,7 +7,7 @@
     />
   </div>
   <div class="messages" v-else>
-    <h4 class="no-message-title">Сообщений нет</h4>
+    <NoMessage>Сообщений нет</NoMessage>
   </div>
 </template>
 

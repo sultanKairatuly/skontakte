@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="component loader_wrapper" v-if="loading">
-            <SkLoader />
-        </div>
+      <SkLoader />
+    </div>
     <KeepAlive v-else>
       <component
         class="component"
@@ -14,7 +14,6 @@
     <FriendTabs
       :tabs="tabs"
       :badges="badges"
-      class="tabs"
       @changeActiveComponent="changeActiveComponent"
     />
   </div>
@@ -29,9 +28,9 @@ import type { ComponentOptions, Component } from "vue";
 import { shallowRef, computed, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import type { Tabs } from "env";
-import SkLoader from '../components/SkLoader.vue'
+import SkLoader from "../components/SkLoader.vue";
 const authStore = useAuthStore();
-const loading = ref<boolean>(false)
+const loading = ref<boolean>(false);
 const tabs: Array<Tabs> = [
   {
     title: "Мои Друзья",
@@ -84,13 +83,12 @@ function changeActiveComponent(component: ComponentOptions) {
   margin: 0;
 }
 
-.loader_wrapper{
+.loader_wrapper {
   position: relative;
   background-color: #fff;
 }
 
-
-@media (max-width: 1440px){
+@media (max-width: 1440px) {
   .component {
     width: 68%;
   }
