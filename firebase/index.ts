@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
+import { collection } from 'firebase/firestore'
 const firebaseConfig = {
   apiKey: "AIzaSyDU5FEq3CVmPchH-ViZaqPr0NsvMX6Tifo",
   authDomain: "skontakte-25a25.firebaseapp.com",
@@ -16,6 +16,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app)
+
+// var collectionRef = db.collection('users');
+// collectionRef.onSnapshot(function(snapshot) {
+//   snapshot.docChanges().forEach(function(change) {
+//       console.log('changed')
+//   });
+// });
 
 export { auth, db }
 

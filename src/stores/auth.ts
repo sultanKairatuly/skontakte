@@ -184,7 +184,7 @@ export const useAuthStore = defineStore("auth", {
       this.user = {};
       router.push("/login");
     },
-    setMessage(id: string, message: Message) {
+    async setMessage(id: string, message: Message) {
       const user = {
         email: this.user.email,
         name: this.user.displayName,
@@ -202,7 +202,14 @@ export const useAuthStore = defineStore("auth", {
           ? { ...chat, messages: [...chat.messages, newMessageItem] }
           : chat
       );
-
+      
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc: any) => {
+        const docEmail = doc.data().email;
+        if (docEmail === this.user.email) {
+          this.user.chats = doc.data().chats
+        }
+      });
       localStorage.setItem("user", JSON.stringify(this.user));
     },
     async updateUser(updates: Updates) {
