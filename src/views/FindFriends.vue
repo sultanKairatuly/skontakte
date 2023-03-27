@@ -22,7 +22,10 @@
             {{ user.name }}
           </div>
           <i
-            v-if="!includes(user, authStore.user.friendRequestTo, 'email')"
+            v-if="
+              !includes(user, authStore.user.friends, 'email') &&
+              !includes(user, authStore.user.friendRequestTo, 'email')
+            "
             class="fa-solid fa-user-plus add-icon"
             @click="sendFriendRequest(user.email)"
           >
@@ -34,7 +37,13 @@
               Добавить в друзья
             </q-tooltip>
           </i>
-          <i v-else class="fa-solid fa-user-check add-icon"></i>
+          <i
+            v-if="
+              includes(user, authStore.user.friends, 'email') ||
+              includes(user, authStore.user.friendRequestTo, 'email')
+            "
+            class="fa-solid fa-user-check add-icon"
+          ></i>
         </div>
       </div>
     </div>

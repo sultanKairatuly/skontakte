@@ -13,6 +13,8 @@
     "@types/uuid": "^9.0.1",
     "@vueuse/core": "^9.13.0",
     "firebase": "^9.17.1",
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.2.1",
     "pinia": "^2.0.28",
     "uuid": "^9.0.0",
     "vue": "^3.2.45",

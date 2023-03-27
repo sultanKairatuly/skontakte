@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, onUnmounted } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import ChatSidebar from "../components/ChatSidebar.vue";
 import ChatContent from "../components/ChatContent.vue";
@@ -35,6 +35,22 @@ const activeChat: Chat = reactive({}) as Chat;
 const searchText = ref<string>("");
 
 authStore.refreshUser();
+
+let interval = setInterval(() => {
+  authStore.refreshUser();
+}, 10000);
+
+onUnmounted(() => {
+  clearInterval(interval);
+});
+
+watch(
+  () => authStore.user.chats,
+  (nv) => {
+    const chat = nv.find((chat: Chat) => chat.id === activeChat.id);
+    Object.assign(activeChat, chat);
+  }
+);
 watch(
   () => route.query,
   (params: { email: string } | {}) => {
