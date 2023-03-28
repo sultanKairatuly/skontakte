@@ -23,6 +23,10 @@ const props = defineProps<{
   chats: Array<Chat>;
   activeChat: Chat;
 }>();
+
+const emit = defineEmits<{
+  (e: "chooseChat", value: Chat): void;
+}>();
 </script>
 
 <style scoped>

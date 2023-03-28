@@ -18,6 +18,9 @@ import { useImageGetter } from "@/composables/utilities";
 import { computed } from "vue";
 import { useAuthStore } from "@/stores/auth";
 
+const emit = defineEmits<{
+  (e: "chooseChat", value: Chat): void;
+}>();
 const authStore = useAuthStore();
 const { getImageUrl } = useImageGetter();
 const props = defineProps<{

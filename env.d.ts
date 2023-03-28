@@ -92,6 +92,7 @@ export type Chat = {
   with: AddedUser;
   messages: Array<Message>;
   id: string;
+  blocked: boolean;
 };
 
 export type User = {

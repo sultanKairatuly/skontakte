@@ -38,7 +38,9 @@ authStore.refreshUser();
 
 let interval = setInterval(() => {
   authStore.refreshUser();
-}, 10000);
+  console.log('update chats!')
+
+}, 5000);
 
 onUnmounted(() => {
   clearInterval(interval);

@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { collection } from 'firebase/firestore'
 const firebaseConfig = {
   apiKey: "AIzaSyDU5FEq3CVmPchH-ViZaqPr0NsvMX6Tifo",
   authDomain: "skontakte-25a25.firebaseapp.com",

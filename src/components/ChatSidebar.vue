@@ -6,7 +6,6 @@
       @clearModelValue="searchText = ''"
     />
     <ChatList
-      class="list"
       :activeChat="props.activeChat"
       :chats="props.chats"
       @chooseChat="(value: Chat) => $emit('chooseChat', value)"
@@ -19,6 +18,10 @@ import type { Chat } from "env";
 import { ref } from "vue";
 import ChatHeaderInput from "../components/ChatHeaderInput.vue";
 import ChatList from "../components/ChatList.vue";
+
+const emit = defineEmits<{
+  (e: "chooseChat", value: Chat): void;
+}>();
 
 const props = defineProps<{
   chats: Array<Chat>;

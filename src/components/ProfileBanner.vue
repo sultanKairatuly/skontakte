@@ -79,7 +79,7 @@
       <div class="helpers">
         <SkButton
           @click="sendFriendRequest"
-          v-if="!includes(props.user, store.user.friends, 'email')"
+          v-if="!includes(props.user, store.user.friendRequestTo, 'email')"
           label="Добавить в друзья"
         />
         <SkButton
@@ -89,7 +89,7 @@
           label="Заявка отправлена"
         />
         <SkButton
-          v-if="includes(props.user, store.user.friends, 'email')"
+          v-if="includes(props.user, store.user.chats, 'email')"
           label="Написать сообщение"
         />
       </div>

@@ -67,6 +67,7 @@ export const useAuthStore = defineStore("auth", {
           friendRequestTo: [],
           friendRequestFrom: [],
           chats: [],
+          importantMessages: []
         });
         const querySnapshot = await getDocs(collection(db, "users"));
         querySnapshot.forEach((doc) => {
@@ -203,13 +204,6 @@ export const useAuthStore = defineStore("auth", {
           : chat
       );
       
-      const querySnapshot = await getDocs(collection(db, "users"));
-      querySnapshot.forEach((doc: any) => {
-        const docEmail = doc.data().email;
-        if (docEmail === this.user.email) {
-          this.user.chats = doc.data().chats
-        }
-      });
       localStorage.setItem("user", JSON.stringify(this.user));
     },
     async updateUser(updates: Updates) {
@@ -287,12 +281,14 @@ export const useAuthStore = defineStore("auth", {
           email: this.user.email,
           photoURL: this.user.photoURL,
         },
+        blocked: false,
         messages: [],
         id: uuidv4(),
       };
 
       const chat2: Chat = {
         with: friend,
+        blocked: false,
         messages: [],
         id: uuidv4(),
       };
