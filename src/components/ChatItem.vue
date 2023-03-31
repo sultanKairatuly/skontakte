@@ -23,6 +23,9 @@ const { getImageUrl } = useImageGetter();
 const props = defineProps<{
   chat: Chat;
 }>();
+const emits = defineEmits<{
+  (e: "chooseChat", value: Chat): void;
+}>();
 
 const lastMessage = computed(() => {
   return props.chat.messages?.[props.chat.messages.length - 1]?.from.email ===
