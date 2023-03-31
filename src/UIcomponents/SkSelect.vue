@@ -49,4 +49,10 @@ function updateModel(e: Event) {
   margin-top: 10px;
   margin-bottom: 25px;
 }
+
+.dark .select {
+  border: 1px solid #424242;
+  color: #ffff;
+  background-color: #222222;
+}
 </style>

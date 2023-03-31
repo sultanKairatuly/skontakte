@@ -5,7 +5,7 @@
       <div class="friends_title title">
         Все друзья {{ props.friends.length }}
       </div>
-      <SkButton label="Найти друзей" @click="$router.push('find-friends')" />
+      <SkButton style="margin-bottom: 20px;" label="Найти друзей" @click="$router.push('find-friends')" />
     </header>
     <SkInput
       :model-value="searchFriend"
@@ -95,6 +95,15 @@ function showFriends(friendEmail: string) {
   transition: 0.1s ease-in;
 }
 
+.friends_title {
+  margin-bottom: 20px;
+}
+
+.btn-center {
+  margin: 17px auto;
+  display: block;
+}
+
 .friends-move, /* apply transition to moving elements */
 .friends-enter-active,
 .friends-leave-active {
@@ -105,6 +114,19 @@ function showFriends(friendEmail: string) {
 .friends-leave-to {
   opacity: 0;
   transform: translateX(30px);
+}
+
+.dark .friends {
+  background-color: #222222;
+  border: 1px solid #424242;
+}
+.dark .title {
+  font-size: 20px;
+  color: #fff;
+}
+.dark .amount {
+  color: #919099;
+  font-weight: bold;
 }
 
 @media (max-width: 1440px) {

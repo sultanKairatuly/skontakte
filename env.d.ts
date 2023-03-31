@@ -105,6 +105,7 @@ export type User = {
   gender: string;
   friends: Array<User>;
   chats: Array<Chat>;
+  importantMessages: Array<Messages>
 };
 
 export type Comment = {
@@ -127,3 +128,5 @@ export type UserDB = {
   gender: string;
   chats: Array<Chat>;
 };
+
+export type Theme = 'Светлая' | 'Темная' | 'White' | 'Dark'

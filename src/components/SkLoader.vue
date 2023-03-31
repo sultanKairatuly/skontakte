@@ -59,4 +59,14 @@
     transform: rotate(360deg);
   }
 }
+
+.dark .loader_container {
+  background-color: #222222;
+  border: 1px solid #424242;
+}
+
+.dark .lds-ring div {
+  border: 3px solid #fff;
+  border-color: #fff transparent transparent transparent;
+}
 </style>

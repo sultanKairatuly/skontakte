@@ -55,7 +55,7 @@
               />
             </div>
             <div class="friend_name">
-              {{ friend.name.split(' ')[0] }}
+              {{ friend.name.split(" ")[0] }}
             </div>
           </div>
         </div>
@@ -160,7 +160,30 @@ console.log(props.user.friends);
   height: 90px;
   object-fit: cover;
 }
+
 .friend_name {
   font-size: 16px;
+}
+
+
+.dark .friend:hover {
+  background-color: #474747;
+}
+
+.dark .friends_container {
+  background-color: #333333;
+  border: 1px solid #424242;
+}
+
+.dark .title {
+  color: #fff;
+}
+
+.dark .friend_number {
+  color: #a9adad;
+}
+.dark .friend_name {
+  font-size: 16px;
+  color: #fff;
 }
 </style>

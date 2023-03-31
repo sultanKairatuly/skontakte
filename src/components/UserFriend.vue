@@ -25,7 +25,7 @@
       class="q-pa-sm dropdown"
       dropdown-icon="fa-solid fa-ellipsis"
     >
-      <q-list>
+      <q-list class="list">
         <q-item
           clickable
           @click="$emit('removeFriend', props.friend.email)"
@@ -107,8 +107,7 @@ const { getImageUrl } = useImageGetter();
   padding: 10px 0;
   margin: 5px 0;
 }
-.no-friends-message {
-}
+
 
 .btn {
   display: block;
@@ -123,4 +122,16 @@ const { getImageUrl } = useImageGetter();
   top: 20px;
   right: 20px;
 }
+
+.dark .friend_item_name {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #fff;
+}
+
+.dark .dropdown {
+  color: #fff;
+}
+
 </style>

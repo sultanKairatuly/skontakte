@@ -10,37 +10,56 @@
       </div>
       <div class="user_name">{{ store.user.displayName }}</div>
     </div>
-    <div
-      class="dropdown_menu_item"
-      v-for="list in props.dropdownList"
-      :key="list.id"
-      @click="$emit('listItemClicked', list)"
-    >
-      <i class="icon" :class="list.icon"></i>
-      <div class="text">{{ list.title }}</div>
+    <div class="dropdown_menu_item">
+      <i class="icon fa-solid fa-gear"></i>
+      <div class="title">Настройки</div>
+    </div>
+    <div class="dropdown_menu_item">
+      <i class="icon fa-solid fa-palette"></i>
+      <SkSelect
+        class="select"
+        :model-value="theme"
+        @update:modelValue="updateTheme"
+        :options="['Светлая', 'Темная']"
+      />
+    </div>
+
+    <div class="dropdown_menu_item" @click="$emit('logout')">
+      <i class="icon fa-solid fa-arrow-right-from-bracket"></i>
+      <div class="title">Выйти</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { profileListItem } from "env";
 import { useAuthStore } from "@/stores/auth";
 import { useImageGetter } from "../composables/utilities";
 import router from "@/router";
+import SkSelect from "../UIcomponents/SkSelect.vue";
+import { ref, watch } from "vue";
+import type { Theme } from "env";
 
+const theme = ref<Theme>("Светлая");
 const { getImageUrl } = useImageGetter();
 const store = useAuthStore();
-const props = defineProps<{
-  dropdownList?: Array<profileListItem>;
-}>();
 
 const emit = defineEmits<{
   (e: "closeProfileDropdown"): void;
+  (e: "changeTheme", value: Theme): void;
+  (e: "openUserProfile"): void;
 }>();
+
+watch(theme, (nv) => {
+  emit("changeTheme", nv);
+});
 
 function openUserProfile() {
   router.push("/profile");
   emit("closeProfileDropdown");
+}
+
+function updateTheme(them: Theme) {
+  theme.value = them;
 }
 </script>
 
@@ -52,6 +71,10 @@ function openUserProfile() {
   padding: 20px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+
+.select {
+  margin: 0;
 }
 
 .dropdown_menu_item {
@@ -94,8 +117,29 @@ function openUserProfile() {
   align-items: center;
 }
 
+.user_name {
+  font-size: 18px;
+}
+
 .profile:hover {
   background-color: #ebf3ff;
+}
+
+.dark .dropdown_menu {
+  background-color: #292929;
+}
+.dark .user_name {
+  color: #fff;
+}
+.dark .dropdown_menu_item {
+  color: #fff;
+}
+
+.dark .dropdown_menu_item:hover {
+  color: #575656;
+}
+.dark .profile {
+  background-color: #333333;
 }
 
 @media (max-width: 1440px) {

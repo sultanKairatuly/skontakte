@@ -63,7 +63,7 @@ defineEmits<{
 
 <style scoped>
 .tabs {
-  width: 27%;
+  width: 20%;
   background-color: #fff;
   padding: 15px 20px;
   border-radius: 20px;
@@ -117,6 +117,23 @@ defineEmits<{
 .active-tab {
   color: red;
 }
+
+.dark .tabs {
+  background-color: #222222;
+  border: 1px solid #424242;
+}
+
+.dark .tab_item:hover {
+  background-color: #444444;
+}
+
+
+
+.dark .title {
+  color: #fff;
+}
+
+
 
 @media (max-width: 1440px) {
   .tabs {

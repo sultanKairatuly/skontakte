@@ -410,6 +410,48 @@ function showCancelFriendRequestPopup() {
   object-fit: cover;
 }
 
+.dark .banner {
+  border: 1px solid #424242;
+  background-color: #5c5e63;
+}
+.dark .user {
+  background-color: #222222;
+}
+.dark .user_avatar_wrapper {
+  background-color: #222222;
+}
+.dark .dropdown_list {
+  background-color: #292929;
+}
+.dark .text {
+  color: #fff;
+}
+.dark .user_name {
+  color: #fff;
+}
+.dark .link_text {
+  color: #fff;
+}
+
+.dark .details_title {
+  color: #fff;
+  background-color: #333333;
+}
+.dark .personal_item {
+  color: #fff;
+}
+.dark .fa-city {
+  color: #939393;
+}
+.dark .fa-gift {
+  color: #939393;
+}
+.dark .general_item_amount {
+  color: #fff;
+}
+.dark .general_item_title {
+  color: #fff;
+}
 @media (max-width: 1440px) {
   .banner {
     height: 300px;

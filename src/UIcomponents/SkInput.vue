@@ -8,8 +8,11 @@
       outlined
       :placeholder="props.placeholder"
       :type="props.type"
-      class="q-pa-sm"
+      class="q-pa-sm input"
       :rules="props.rules"
+      :class="{
+        'color-red': isDark
+      }"
     >
       <template v-slot:append>
         <q-icon class="icon" @click="$emit('iconClicked')" :name="icon" />
@@ -19,6 +22,8 @@
 </template>
 
 <script setup lang="ts">
+import { inject, watch } from "vue";
+
 type InputTypes =
   | "number"
   | "text"
@@ -50,6 +55,12 @@ const props = withDefaults(
     fontSize: "18px",
   }
 );
+
+const isDark = inject("isDark");
+watch(isDark, (nv) => {
+  console.log(nv);
+});
+console.log(isDark);
 const emit = defineEmits<{
   (e: "update:modelValue", value: string | number | null): void;
 }>();
@@ -63,23 +74,39 @@ function updateModel(value: string | number | null) {
 .box {
   position: relative;
 }
-.input_item {
-  position: relative;
-  background-color: #edeef0;
-  border-radius: 10px;
-  border: none;
-  font-size: 18px;
-  width: 100%;
-  outline: none;
-  border: 1px solid #dadbdd;
-  display: block;
-}
 
 .input:focus {
   border: 1px solid #2b8cfc;
 }
 
 .icon {
+  color: #447bba;
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dark .input_item {
+  position: relative;
+  background-color: #292929;
+  border-radius: 10px;
+  border: none;
+  font-size: 18px;
+  width: 100%;
+  outline: none;
+  border: 1px solid #424242;
+  display: block;
+  color: #fff;
+}
+
+.dark .input:focus {
+  border: 1px solid #707274;
+}
+
+.dark .icon {
   color: #447bba;
   position: absolute;
   right: 10px;

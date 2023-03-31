@@ -114,4 +114,30 @@ const props = defineProps<{
   color: #3a7dbf;
   background-color: #ebe6e6;
 }
+
+.dark .article {
+  background-color: #222222;
+  border: 1px solid #424242;
+}
+
+.dark .author_name {
+  color: #fff;
+}
+
+.dark .article_content {
+  font-size: 18px;
+  color: #fff;
+}
+
+.dark .icon {
+  font-size: 20px;
+  color: #939393;
+  cursor: pointer;
+  padding: 5px;
+  transition: 0.2s ease-in-out;
+}
+
+.dark .icon:hover {
+  color: #939393;
+}
 </style>

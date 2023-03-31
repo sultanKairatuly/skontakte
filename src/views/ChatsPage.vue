@@ -4,16 +4,48 @@
       :activeChat="activeChat"
       :chats="authStore.user.chats"
       @chooseChat="chooseChat"
+      @showImportantMessages="showImportantMessages"
     />
     <ChatContent
-      @searchMessages="searching = true"
+      @addImportantMessage="addImportantMessage"
+      @searchMessages="lol"
       @cancelSearching="searching = false"
       :activeChat="activeChat"
-      :searchText="searchText"
       :searching="searching"
       @sendMessage="sendMessage"
-      @update:modelValue="(value: string) => (searchText = value)"
+      @removeImportantMessage="removeImportantMessage"
+      @deleteMessage="deleteMessage"
     />
+    <Teleport to=".app">
+      <SkPopup
+        :class="{
+          showed: importantMessagesPopup,
+          hidden: !importantMessagesPopup,
+        }"
+        @close-popup="closeCancelFriendRequestPopup"
+        class="details_modal"
+        padding="0px"
+        width="800px"
+      >
+        <template #modal>
+          <h3 class="details_title">Важные сообщения</h3>
+          <div
+            class="messages"
+            ref="messages"
+            v-if="authStore.user.importantMessages.length"
+          >
+            <MessageItem
+              v-for="message in authStore.user.importantMessages"
+              :message="message"
+              :key="message.id"
+            />
+          </div>
+          <div class="messages" v-else>
+            <NoMessage>Важных сообщений нет</NoMessage>
+          </div>
+        </template>
+      </SkPopup>
+    </Teleport>
   </div>
 </template>
 
@@ -22,33 +54,31 @@ import { ref, reactive, watch, onUnmounted } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import ChatSidebar from "../components/ChatSidebar.vue";
 import ChatContent from "../components/ChatContent.vue";
-import type { Chat } from "env";
+import type { Chat, Message } from "env";
 import { getDocs, doc, updateDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase";
 import { uuidv4 } from "@firebase/util";
 import { useRoute } from "vue-router";
+import SkPopup from "../UIcomponents/SkPopup.vue";
+import MessageItem from "../components/MessageItem.vue";
 
 const route = useRoute();
 const searching = ref<boolean>(false);
 const authStore = useAuthStore();
 const activeChat: Chat = reactive({}) as Chat;
-const searchText = ref<string>("");
+const importantMessagesPopup = ref<boolean>(false);
+const stoped = ref<boolean>(false);
 
 authStore.refreshUser();
 
-let interval = setInterval(() => {
-  authStore.refreshUser();
-  console.log('update chats!')
-
-}, 5000);
-
-onUnmounted(() => {
-  clearInterval(interval);
-});
-
+function lol() {
+  console.log("dwdawd");
+  searching.value = true;
+}
 watch(
   () => authStore.user.chats,
   (nv) => {
+    console.log(nv);
     const chat = nv.find((chat: Chat) => chat.id === activeChat.id);
     Object.assign(activeChat, chat);
   }
@@ -75,51 +105,94 @@ function chooseChat(chat: Chat) {
 }
 
 async function sendMessage(message: string) {
-  const friendEmail = activeChat.with.email;
+  if (message !== "") {
+    stoped.value = true;
+    const friendEmail = activeChat.with.email;
+    let docId = "";
+    let docId2 = "";
+    let friendChats = [] as Array<Chat>;
+
+    const querySnapshot = await getDocs(collection(db, "users"));
+    querySnapshot.forEach((doc: any) => {
+      const docEmail = doc.data().email;
+      if (docEmail === friendEmail) {
+        friendChats.push(...doc.data().chats);
+        docId2 = doc.id;
+      } else if (docEmail === authStore.user.email) {
+        docId = doc.id;
+      }
+    });
+    const user = {
+      email: authStore.user.email,
+      name: authStore.user.displayName,
+      photoURL: authStore.user.photoURL,
+    };
+    const newMessage = {
+      from: user,
+      message,
+      id: uuidv4(),
+      createdAt: Date.now(),
+    };
+    authStore.setMessage(activeChat.id, newMessage);
+    const chat = authStore.user.chats.find(
+      (chat: Chat) => chat.id === activeChat.id
+    );
+    Object.assign(activeChat, chat);
+    friendChats = friendChats.map((chat: Chat) => {
+      if (chat.with.email === authStore.user.email) {
+        return { ...chat, messages: [...chat.messages, newMessage] };
+      } else {
+        return chat;
+      }
+    });
+    await updateDoc(doc(db, "users", docId), {
+      chats: authStore.user.chats,
+    });
+
+    await updateDoc(doc(db, "users", docId2), {
+      chats: friendChats,
+    });
+    stoped.value = false;
+  }
+}
+
+async function deleteMessage(id: string) {
+  stoped.value = true;
   let docId = "";
-  let docId2 = "";
-  let friendChats = [] as Array<Chat>;
 
   const querySnapshot = await getDocs(collection(db, "users"));
   querySnapshot.forEach((doc: any) => {
     const docEmail = doc.data().email;
-    if (docEmail === friendEmail) {
-      friendChats.push(...doc.data().chats);
-      docId2 = doc.id;
-    } else if (docEmail === authStore.user.email) {
+    if (docEmail === authStore.user.email) {
       docId = doc.id;
     }
   });
-  const user = {
-    email: authStore.user.email,
-    name: authStore.user.displayName,
-    photoURL: authStore.user.photoURL,
-  };
-  const newMessage = {
-    from: user,
-    message,
-    id: uuidv4(),
-    createdAt: Date.now(),
-  };
-  authStore.setMessage(activeChat.id, newMessage);
-  const chat = authStore.user.chats.find(
-    (chat: Chat) => chat.id === activeChat.id
-  );
-  Object.assign(activeChat, chat);
-  friendChats = friendChats.map((chat: Chat) => {
-    if (chat.with.email === authStore.user.email) {
-      return { ...chat, messages: [...chat.messages, newMessage] };
-    } else {
-      return chat;
-    }
-  });
+  await authStore.deleteMessage(id, activeChat.id);
   await updateDoc(doc(db, "users", docId), {
     chats: authStore.user.chats,
+    importantMessages: authStore.user.importantMessages,
   });
 
-  await updateDoc(doc(db, "users", docId2), {
-    chats: friendChats,
-  });
+  stoped.value = false;
+}
+
+function addImportantMessage(message: Message) {
+  stoped.value = true;
+  authStore.setImportantMessage(message);
+  stoped.value = false;
+}
+
+function removeImportantMessage(message: Message) {
+  stoped.value = true;
+  authStore.removeImportantMessage(message);
+  stoped.value = false;
+}
+
+function showImportantMessages() {
+  importantMessagesPopup.value = true;
+}
+function closeCancelFriendRequestPopup() {
+  importantMessagesPopup.value = false;
 }
 </script>
 
@@ -127,5 +200,40 @@ async function sendMessage(message: string) {
 .container {
   display: flex;
   max-height: 100vh;
+}
+
+.details_title {
+  font-size: 20px;
+  background-color: #f0f4f8;
+  padding: 15px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  border-bottom: 1px solid #dce1e6;
+}
+
+.showed {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.messages {
+  background-color: #fff;
+  min-height: 200px;
+  padding: 20px 40px 40px 40px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.dark .details_title {
+  border-bottom: 1px solid #424242;
+  background-color: #222222;
+}
+.dark .messages {
+  background-color: #222222;
 }
 </style>

@@ -7,7 +7,7 @@
         :article="article"
         :key="article.id"
         @deleteArticle="(value) => $emit('deleteArticle', value)"
-        @editArticle="(value) => $emit('editArticle')"
+        @editArticle="$emit('editArticle')"
         @saveEdits="(value) => $emit('saveEdits', value)"
       />
     </TransitionGroup>

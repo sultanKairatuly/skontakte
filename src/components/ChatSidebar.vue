@@ -1,13 +1,15 @@
 <template>
   <div class="chats_sidebar">
     <ChatHeaderInput
+      :ellipsis="true"
       :model-value="searchText"
-      @update:modelValue="(value) => (searchText = value)"
+      @showImportantMessages="$emit('showImportantMessages')"
+      @update:modelValue="(value: string) => (searchText = value)"
       @clearModelValue="searchText = ''"
     />
     <ChatList
       :activeChat="props.activeChat"
-      :chats="props.chats"
+      :chats="filteredChats"
       @chooseChat="(value: Chat) => $emit('chooseChat', value)"
     />
   </div>
@@ -15,20 +17,26 @@
 
 <script setup lang="ts">
 import type { Chat } from "env";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import ChatHeaderInput from "../components/ChatHeaderInput.vue";
 import ChatList from "../components/ChatList.vue";
 
 const emit = defineEmits<{
   (e: "chooseChat", value: Chat): void;
+  (e: "showImportantMessages"): void;
 }>();
+const searchText = ref<string>("");
+
+const filteredChats = computed(() => {
+  return props.chats.filter((chat) =>
+    chat.with.name.toLowerCase().startsWith(searchText.value.toLowerCase())
+  );
+});
 
 const props = defineProps<{
   chats: Array<Chat>;
   activeChat: Chat;
 }>();
-
-const searchText = ref<string>("");
 </script>
 
 <style scoped>
@@ -45,5 +53,13 @@ const searchText = ref<string>("");
   margin-top: 5px;
   height: 100%;
   background-color: #fff;
+}
+
+.dark .list {
+  background-color: #222222;
+}
+
+.dark .chats_sidebar {
+  border-right: 1px solid #424242;
 }
 </style>

@@ -37,9 +37,10 @@
         <ProfileDropdown
           @click.stop
           v-if="isProfileDropDown"
-          :dropdown-list="dropdownListItems"
-          @listItemClicked="handleListItemClicked"
-          @close-profile-dropdown="closeProfileDropdown"
+          @closeProfileDropdown="closeProfileDropdown"
+          @openUserProfile="openProfileDropdown"
+          @changeTheme="changeTheme"
+          @logout="logout"
         />
       </div>
       <div v-else>регистрация</div>
@@ -48,9 +49,8 @@
 </template>
 
 <script setup lang="ts">
-import type { profileListItem, UserDB } from "env";
+import type { UserDB, Theme } from "env";
 import ProfileDropdown from "./ProfileDropdown.vue";
-import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "@/stores/auth";
 import { ref, reactive, watch } from "vue";
 import { getDocs, collection } from "firebase/firestore";
@@ -65,6 +65,10 @@ document.addEventListener("click", (e: Event) => {
   }
 });
 
+const emit = defineEmits<{
+  (e: "changeTheme", value: Theme): void;
+}>();
+
 const { includes } = useImageGetter();
 const isMenu = ref<boolean>(false);
 const router = useRouter();
@@ -72,26 +76,6 @@ const users: Array<UserDB> = reactive([]);
 const search = ref<string>("");
 const store = useAuthStore();
 const isProfileDropDown = ref<boolean>(false);
-const dropdownListItems: Array<profileListItem> = [
-  {
-    icon: "fa-solid fa-gear",
-    title: "Настройки",
-    action: goSettings,
-    id: uuidv4(),
-  },
-  {
-    icon: "fa-solid fa-palette",
-    title: "Тема",
-    action: changeTheme,
-    id: uuidv4(),
-  },
-  {
-    icon: "fa-solid fa-arrow-right-from-bracket",
-    title: "Выйти",
-    action: logOut,
-    id: uuidv4(),
-  },
-];
 
 watch(users, (nv) => {
   if (Object.keys(nv).length > 0) {
@@ -101,32 +85,16 @@ watch(users, (nv) => {
   }
 });
 
-function goSettings() {
-  console.log("settings");
-}
-
-function changeTheme() {
-  console.log("changeTheme");
-}
-
-function logOut() {
-  store.logoutUser();
-}
-
-function handleListItemClicked(list: profileListItem): void {
-  dropdownListItems.forEach((listItem) => {
-    if (list.id === listItem.id) {
-      listItem.action();
-      isProfileDropDown.value = false;
-    }
-  });
-}
-
 function openProfileDropdown() {
   isProfileDropDown.value = !isProfileDropDown.value;
 }
 
 function closeProfileDropdown() {
+  isProfileDropDown.value = false;
+}
+
+function logout() {
+  store.logoutUser();
   isProfileDropDown.value = false;
 }
 
@@ -156,6 +124,12 @@ function viewProfile(userEmail: string) {
   isMenu.value = false;
   router.push(`/user/${userEmail}`);
   search.value = "";
+}
+
+function changeTheme(theme: Theme) {
+  emit("changeTheme", theme);
+  console.log(theme);
+  isProfileDropDown.value = false;
 }
 </script>
 
@@ -264,6 +238,7 @@ function viewProfile(userEmail: string) {
   border-right: none;
   transform: rotate(225deg);
 }
+
 .user {
   align-items: center;
   display: flex;
@@ -278,6 +253,54 @@ function viewProfile(userEmail: string) {
   width: 42px;
   height: 42px;
   object-fit: cover;
+}
+
+.dark .header {
+  background-color: #222222;
+  border-bottom: 1px solid #292929;
+}
+.dark .header__logo {
+  color: #fff;
+}
+
+.dark .header__content {
+}
+.dark .search {
+  background-color: #424242;
+  color: #fff;
+}
+.dark .menu {
+  background-color: #292929;
+}
+.dark .user {
+}
+
+.dark .user {
+  background-color: #222222;
+}
+
+.dark .user:hover {
+  background-color: #292929;
+}
+.dark .user_avatar_container {
+}
+.dark .user_avatar {
+}
+.dark .user_name {
+}
+
+.dark .profile {
+  background-color: #222222;
+}
+
+.dark .profile:hover {
+  background-color: #292929;
+}
+.dark .avatar_wrapper {
+}
+.dark .avatar {
+}
+.dark .dropdown {
 }
 
 @media (max-width: 1440px) {
@@ -295,9 +318,6 @@ function viewProfile(userEmail: string) {
     margin: 0 auto;
     font-size: 12.5px;
     padding: 0 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
   }
   .header__logo {
     font-size: 23px;
@@ -311,28 +331,16 @@ function viewProfile(userEmail: string) {
   .profile {
     padding: 2px;
   }
-
-  .profile:hover {
-    background-color: #edeef0;
-  }
-
   .dropdown {
     width: 8px;
     height: 8px;
-    border: 3px solid #aeb7c2;
-    border-bottom: none;
-    border-right: none;
-    transform: rotate(225deg);
   }
   .user {
-    align-items: center;
-    display: flex;
     padding: 2px;
     column-gap: 15px;
   }
   .avatar_wrapper {
     border-radius: 50%;
-    overflow: hidden;
   }
 
   .avatar {

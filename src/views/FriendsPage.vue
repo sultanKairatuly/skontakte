@@ -75,9 +75,10 @@ function changeActiveComponent(component: ComponentOptions) {
 }
 
 .component {
-  width: 80%;
+  width: 78%;
   height: fit-content;
 }
+
 
 .friends {
   margin: 0;

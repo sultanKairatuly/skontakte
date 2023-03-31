@@ -50,6 +50,7 @@ export const useAuthStore = defineStore("auth", {
           friends: user.friends,
           photoURL: photoURL,
           chats: user.chats,
+          importantMessages: user.importantMessages
         };
         localStorage.setItem("user", JSON.stringify(this.user));
         await addDoc(collection(db, "users"), {
@@ -206,6 +207,18 @@ export const useAuthStore = defineStore("auth", {
       
       localStorage.setItem("user", JSON.stringify(this.user));
     },
+    async deleteMessage(id: string, chatId: string){
+      this.user.chats = this.user.chats.map((chat: Chat) => {
+        if(chat.id === chatId){
+          return {...chat, messages: [...chat.messages.filter(message => message.id !== id)]}
+        }else{
+          return chat
+        }
+      });
+
+      this.user.importantMessages = this.user.importantMessages.filter((message: Message) => message.id !== id)
+      localStorage.setItem("user", JSON.stringify(this.user));
+    },
     async updateUser(updates: Updates) {
       const photosStore = usePhotoStore();
       await photosStore.loadPhotos();
@@ -330,5 +343,78 @@ export const useAuthStore = defineStore("auth", {
         friends: this.user.friends,
       });
     },
+    async setImportantMessage(message: Message){
+      this.user.importantMessages.push(message)
+      localStorage.setItem('user', JSON.stringify(this.user))
+      let docId = "";
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc: any) => {
+        const docEmail = doc.data().email;
+        if (docEmail === this.user.email) {
+          docId = doc.id;
+        }
+      });
+      await updateDoc(doc(db, "users", docId), {
+        importantMessages: this.user.importantMessages,
+      });
+    },
+    async removeImportantMessage(message: Message){
+      this.user.importantMessages = this.user.importantMessages.filter((item: Message) => item.id !== message.id)
+      localStorage.setItem('user', JSON.stringify(this.user))
+      let docId = "";
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc: any) => {
+        const docEmail = doc.data().email;
+        if (docEmail === this.user.email) {
+          docId = doc.id;
+        }
+      });
+      await updateDoc(doc(db, "users", docId), {
+        importantMessages: this.user.importantMessages,
+      });
+    },
+    async clearChatHistory(id: string){
+      this.user.chats = this.user.chats.map((chat: Chat) => {
+        if(chat.id === id){
+          return {
+            ...chat,
+            messages: []
+          }
+        }else{
+          return chat
+        }
+      })
+      localStorage.setItem('user', JSON.stringify(this.user))
+      let docId = "";
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc: any) => {
+        const docEmail = doc.data().email;
+        if (docEmail === this.user.email) {
+          docId = doc.id;
+        }
+      });
+      await updateDoc(doc(db, "users", docId), {
+        chats: this.user.chats
+      });
+    },
+    async blockChat(id: string){
+      this.user.chats.forEach((chat: Chat) => {
+        if(chat.id === id){
+          chat.blocked = true
+        }
+      })
+      localStorage.setItem('user', JSON.stringify(this.user))
+      let docId = "";
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc: any) => {
+        const docEmail = doc.data().email;
+        if (docEmail === this.user.email) {
+          docId = doc.id;
+        }
+      });
+      await updateDoc(doc(db, "users", docId), {
+        chats: this.user.chats
+      });
+    }
   },
 });

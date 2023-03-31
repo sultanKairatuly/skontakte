@@ -7,6 +7,7 @@
       <SkLoader />
     </div>
     <ArticleList
+      v-else
       :articles="articles"
       :editing="editing"
       @deleteArticle="deleteArticle"
@@ -115,6 +116,7 @@ async function saveEdits(id: string) {
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid #dce1e6;
+  background-color: #000;
 }
 .title {
   font-size: 25px;
@@ -129,5 +131,15 @@ async function saveEdits(id: string) {
   font-weight: bold;
   color: #2a5885;
   font-size: 25px;
+}
+
+.dark .title {
+  border: 1px solid #424242;
+  background-color: #222222;
+  color: #fff;
+}
+
+.dark .amount {
+  color: gray;
 }
 </style>

@@ -257,4 +257,36 @@ async function publish() {
   opacity: 0;
   transform: translateX(30px);
 }
+
+.dark .entries {
+  background-color: #222222;
+}
+
+.dark .content {
+  background-color: #222222;
+}
+.dark .loader-wrapper {
+}
+.dark .images {
+}
+.dark .user-image_container {
+}
+.dark .user-image {
+}
+.dark .no-photo_message {
+}
+.dark .btns {
+}
+.dark .images-wrapper {
+}
+.dark .modal_title {
+}
+.dark .modal_image_container {
+}
+.dark .modal_image {
+}
+.dark .extra-info {
+}
+.dark .publish {
+}
 </style>

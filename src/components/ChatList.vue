@@ -36,4 +36,8 @@ const emit = defineEmits<{
   flex-direction: column;
   background-color: #fff;
 }
+
+.dark .chats_items {
+  background-color: #222222;
+}
 </style>

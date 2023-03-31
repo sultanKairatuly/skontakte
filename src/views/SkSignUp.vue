@@ -11,7 +11,7 @@
             placeholder="Имя"
             class="input"
             :padding="'10px 30px'"
-            :rules="[ val => val.length >= 1 || 'Поле не должно быть пустым' ]"
+            :rules="[(val) => val.length >= 1 || 'Поле не должно быть пустым']"
             :fontSize="'16px'"
           />
           <label class="label" for="email">Email</label>
@@ -21,7 +21,7 @@
             placeholder="Email"
             class="input"
             :padding="'10px 30px'"
-            :rules="[ val => val.length >= 1 || 'Поле не должно быть пустым' ]"
+            :rules="[(val) => val.length >= 1 || 'Поле не должно быть пустым']"
             :fontSize="'16px'"
           />
           <label class="label" for="name">Пароль</label>
@@ -34,13 +34,15 @@
             @iconClicked="isPwt = !isPwt"
             :padding="'10px 30px'"
             :icon="passwordIcon"
-            :rules="[ val => val.length >= 1 || 'Поле не должно быть пустым' ]"
+            :rules="[(val) => val.length >= 1 || 'Поле не должно быть пустым']"
             :fontSize="'16px'"
           />
-          <label class="label photo-label" for="profile photo">Фото профиля</label>
+          <label class="label photo-label" for="profile photo"
+            >Фото профиля</label
+          >
           <div class="avatar_container">
             <q-skeleton type="circle" v-if="photoLoading" class="skeleton" />
-            <img :src="photoUrl" v-else class="avatar">
+            <img :src="photoUrl" v-else class="avatar" />
           </div>
           <SkButton class="btn" @click="uploadPhoto" label="Загрузить" />
         </template>
@@ -61,7 +63,7 @@
             />
             <SkSelect
               class="select-two"
-              :options="birthMonthOptions.map(item => item.slice(0, 3))"
+              :options="birthMonthOptions.map((item) => item.slice(0, 3))"
               :modelValue="birthday.month"
               @update:modelValue="monthChanged"
             />
@@ -80,7 +82,7 @@
             class="input"
             :padding="'10px 30px'"
             :fontSize="'16px'"
-            :rules="[ val => val.length >= 1 || 'Поле не должно быть пустым' ]"
+            :rules="[(val) => val.length >= 1 || 'Поле не должно быть пустым']"
           />
         </template>
         <template #btns>
@@ -94,7 +96,7 @@
         После регистрации вы получите дополнительные возможности
       </div>
     </div>
-    <SkLoader  v-if="loading" />
+    <SkLoader v-if="loading" />
   </div>
 </template>
 
@@ -103,13 +105,12 @@ import SkForm from "../components/SkForm.vue";
 import SkInput from "../UIcomponents/SkInput.vue";
 import SkLoader from "../components/SkLoader.vue";
 import SkSelect from "../UIcomponents/SkSelect.vue";
-import SkButton from '../UIcomponents/SkButton.vue'
+import SkButton from "../UIcomponents/SkButton.vue";
 import { ref, reactive, computed } from "vue";
 import { useAuthStore } from "../stores/auth";
 import type { User, Birthday, MonthData, stringMonthSignature } from "env";
 
-
-const photoLoading = ref<boolean>(false)
+const photoLoading = ref<boolean>(false);
 const loading = ref<boolean>(false);
 const isPwt = ref(false);
 const store = useAuthStore();
@@ -125,67 +126,67 @@ const birthday: Birthday = reactive({
 });
 const photoURL = ref<string>("");
 const passwordIcon = computed(() => {
-  if(isPwt.value && !password.value) return ''
-  else if(isPwt.value && password.value) return 'fa-solid fa-eye'
-  else if(!isPwt.value && password.value) return 'fa-solid fa-eye-slash'
-  else return ''
-})
-const monthData: Array<MonthData>= [
+  if (isPwt.value && !password.value) return "";
+  else if (isPwt.value && password.value) return "fa-solid fa-eye";
+  else if (!isPwt.value && password.value) return "fa-solid fa-eye-slash";
+  else return "";
+});
+const monthData: Array<MonthData> = [
   {
-    name: 'январь',
-    days: 31
+    name: "январь",
+    days: 31,
   },
   {
-    name: 'февраль',
-    days: 28
+    name: "февраль",
+    days: 28,
   },
   {
-    name: 'март',
-    days: 31
+    name: "март",
+    days: 31,
   },
   {
-    name: 'апрель',
-    days: 30
+    name: "апрель",
+    days: 30,
   },
   {
-    name: 'май',
-    days: 31
+    name: "май",
+    days: 31,
   },
   {
-    name: 'июнь',
-    days: 30
+    name: "июнь",
+    days: 30,
   },
   {
-    name: 'июль',
-    days: 31
+    name: "июль",
+    days: 31,
   },
   {
-    name: 'август',
-    days: 31
+    name: "август",
+    days: 31,
   },
   {
-    name: 'сентябрь',
-    days: 30
+    name: "сентябрь",
+    days: 30,
   },
   {
-    name: 'октябрь',
-    days: 31
+    name: "октябрь",
+    days: 31,
   },
   {
-    name: 'ноябрь',
-    days: 30
+    name: "ноябрь",
+    days: 30,
   },
   {
-    name: 'декабрь',
-    days: 31
+    name: "декабрь",
+    days: 31,
   },
-]
+];
 
 const birthYearOptions: Array<string> = [];
 const birthDayOptions: Array<string> = reactive([]);
-const birthMonthOptions: Array<string> = monthData.map((item: MonthData) => item.name);
-
-
+const birthMonthOptions: Array<string> = monthData.map(
+  (item: MonthData) => item.name
+);
 
 const monthsValue: stringMonthSignature = {
   янв: 1,
@@ -220,58 +221,67 @@ for (let i = 1900; i <= 2010; i++) {
 }
 
 const photoUrl = computed(() => {
-  return imageUrl.value.length > 0 ? imageUrl.value : 'https://images.are.na/eyJidWNrZXQiOiJhcmVuYV9pbWFnZXMiLCJrZXkiOiI4MDQwOTc0L29yaWdpbmFsX2ZmNGYxZjQzZDdiNzJjYzMxZDJlYjViMDgyN2ZmMWFjLnBuZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6MTIwMCwiaGVpZ2h0IjoxMjAwLCJmaXQiOiJpbnNpZGUiLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9LCJ3ZWJwIjp7InF1YWxpdHkiOjkwfSwianBlZyI6eyJxdWFsaXR5Ijo5MH0sInJvdGF0ZSI6bnVsbH19?bc=0'
-})
-
+  return imageUrl.value.length > 0
+    ? imageUrl.value
+    : "https://images.are.na/eyJidWNrZXQiOiJhcmVuYV9pbWFnZXMiLCJrZXkiOiI4MDQwOTc0L29yaWdpbmFsX2ZmNGYxZjQzZDdiNzJjYzMxZDJlYjViMDgyN2ZmMWFjLnBuZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6MTIwMCwiaGVpZ2h0IjoxMjAwLCJmaXQiOiJpbnNpZGUiLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9LCJ3ZWJwIjp7InF1YWxpdHkiOjkwfSwianBlZyI6eyJxdWFsaXR5Ijo5MH0sInJvdGF0ZSI6bnVsbH19?bc=0";
+});
 
 function register(e: Event): void {
   e.preventDefault();
-  if(name.value === '' || email.value === '' || city.value == '' || password.value === '' || birthday.month === '' || birthday.day === '' || birthday.year === ''){
-    
-    console.log('you are wrong')
+  if (
+    name.value === "" ||
+    email.value === "" ||
+    city.value == "" ||
+    password.value === "" ||
+    birthday.month === "" ||
+    birthday.day === "" ||
+    birthday.year === ""
+  ) {
+    console.log("you are wrong");
     return;
-  }else{
+  } else {
     loading.value = true;
     const user: User = {
-    name: name.value,
-    email: email.value,
-    password: password.value,
-    photoURL: photoUrl.value,
-    birthday: `${dayFormatted.value}.${monthFormatted.value}.${birthday.year}`,
-    city: city.value,
-    gender: gender.value,
-    friends: [],
-    chats: []
-  };
-  store.registerUser(user);
-  name.value = "";
-  email.value = "";
-  password.value = "";
-  photoURL.value = "";
-  birthday.day = "";
-  birthday.year = "";
-  birthday.month = "январь";
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      photoURL: photoUrl.value,
+      birthday: `${dayFormatted.value}.${monthFormatted.value}.${birthday.year}`,
+      city: city.value,
+      gender: gender.value,
+      friends: [],
+      chats: [],
+      importantMessages: [],
+    };
+    store.registerUser(user);
+    name.value = "";
+    email.value = "";
+    password.value = "";
+    photoURL.value = "";
+    birthday.day = "";
+    birthday.year = "";
+    birthday.month = "январь";
   }
-
 }
 
-function monthChanged(month: string){
-  birthday.month = month
-  const monthDays = monthData.filter(item => item.name.slice(0, 3) === month)[0].days
-  birthDayOptions.splice(0)
-  for(let i = 1; i <= monthDays; i++){
-    birthDayOptions.push(i.toString())
+function monthChanged(month: string) {
+  birthday.month = month;
+  const monthDays = monthData.filter(
+    (item) => item.name.slice(0, 3) === month
+  )[0].days;
+  birthDayOptions.splice(0);
+  for (let i = 1; i <= monthDays; i++) {
+    birthDayOptions.push(i.toString());
   }
-  if(+birthday.day > monthDays){
-    birthday.day = '1'
+  if (+birthday.day > monthDays) {
+    birthday.day = "1";
   }
-
 }
 
 const imageUrl = ref<string>("");
 const image = ref<string>("");
 function onFilePicked(event: any) {
-  photoLoading.value = true
+  photoLoading.value = true;
   const target = event?.target;
   if (target) {
     const files = [target][0].files;
@@ -280,17 +290,17 @@ function onFilePicked(event: any) {
     fileReader.addEventListener("load", async () => {
       imageUrl.value = fileReader.result as string;
     });
-    photoLoading.value = false
+    photoLoading.value = false;
     fileReader.readAsDataURL(files[0]);
     image.value = files[0];
   }
 }
 
-function uploadPhoto(){
-  const fileInput: HTMLInputElement = document.createElement('input')
-  fileInput.setAttribute('type', 'file')
-  fileInput.addEventListener('change', onFilePicked)
-  fileInput.click()
+function uploadPhoto() {
+  const fileInput: HTMLInputElement = document.createElement("input");
+  fileInput.setAttribute("type", "file");
+  fileInput.addEventListener("change", onFilePicked);
+  fileInput.click();
 }
 </script>
 
@@ -317,7 +327,7 @@ function uploadPhoto(){
   width: 650px;
 }
 
-.avatar{
+.avatar {
   width: 100%;
   object-fit: cover;
   height: 100%;
@@ -353,25 +363,25 @@ function uploadPhoto(){
   background-color: #1c86ff;
 }
 
-.btn{
+.btn {
   margin: 10px auto;
   display: block;
 }
 
-.photo-label{
+.photo-label {
   text-align: center;
   display: block;
 }
 
-.select-one{
+.select-one {
   width: 55px;
 }
 
-.select-two{
+.select-two {
   width: 65px;
 }
 
-.select-three{
+.select-three {
   width: 80px;
 }
 
@@ -423,7 +433,6 @@ function uploadPhoto(){
     font-size: 18px;
     padding: 10px;
   }
-
 
   .register {
     font-size: 18px;

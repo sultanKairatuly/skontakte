@@ -41,4 +41,9 @@ const props = withDefaults(
 .btn:hover {
   background-color: #d3d6da;
 }
+
+.dark .btn{
+  background-color: #424242;
+  color: #fff;
+}
 </style>

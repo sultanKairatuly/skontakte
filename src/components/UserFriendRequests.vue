@@ -90,6 +90,19 @@ function cancelFriendRequest() {}
   flex-direction: column;
 }
 
+.dark .requests {
+  background-color: #222222;
+  border: 1px solid #424242;
+}
+.title {
+  color: #fff;
+  font-size: 20px;
+}
+.amount {
+  color: #aaa9ad;
+  font-weight: bold;
+}
+
 @media (max-width: 1440px) {
   .requests {
     padding: 7px 17px;

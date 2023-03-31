@@ -126,6 +126,12 @@ function changeEntryLink(link: entriesNavItem) {
   border: 2px solid #dce1e6;
 }
 
+
+
+.dark .active {
+  color: #fff;
+}
+
 @media (max-width: 1440px) {
   .entries {
     padding: 25px;

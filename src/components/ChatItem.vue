@@ -50,29 +50,29 @@ const lastMessage = computed(() => {
 }
 
 .avatar_container {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   overflow: hidden;
   border-radius: 50%;
 }
 
 .avatar {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
 }
 .text {
   margin-left: 15px;
-  padding: 2px;
+  padding: 6px;
   width: 75%;
 }
 .with_name {
-  font-size: 18px;
+  font-size: 21px;
 }
 
 .with_message {
   color: gray;
-  font-size: 13px;
+  font-size: 18px;
   width: 100%;
   overflow: hidden; /* hide any overflow beyond the container */
   white-space: nowrap;
@@ -88,11 +88,83 @@ const lastMessage = computed(() => {
 }
 
 .active .with_name {
-  font-size: 18px;
+  font-size: 21px;
   color: #fff;
 }
 
 .active .with_message {
   color: #fff;
+}
+
+.dark .item {
+  background-color: #222222;
+}
+
+.dark .item:hover {
+  background-color: #363636;
+  border-bottom: 1px solid #bdbdbd;
+}
+
+.dark .text {
+  margin-left: 15px;
+  padding: 6px;
+  width: 75%;
+}
+.dark .with_name {
+  font-size: 21px;
+  color: #fff;
+}
+
+.dark .active {
+  background-color: #397dcc;
+}
+
+.dark .active:hover {
+  background-color: #5c80b4;
+}
+
+.dark .active .with_name {
+  font-size: 21px;
+  color: #fff;
+}
+
+.dark .active .with_message {
+  color: #fff;
+}
+
+@media (max-width: 1440px) {
+  .item {
+    padding: 5px 10px;
+  }
+
+  .avatar_container {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+  .text {
+    margin-left: 15px;
+    padding: 2px;
+    width: 75%;
+  }
+  .with_name {
+    font-size: 18px;
+  }
+
+  .with_message {
+    font-size: 13px;
+    width: 100%;
+  }
+
+  .active .with_name {
+    font-size: 18px;
+  }
 }
 </style>

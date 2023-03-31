@@ -76,6 +76,17 @@ const sidebarItems: Array<sidebarItem> = [
   font-size: 18px;
 }
 
+.dark .sidebar {
+  background-color: #222222;
+}
+
+.dark .sidebar_item:hover {
+  background-color: rgb(63, 63, 63);
+}
+.dark .sidebar_item-title {
+  color: #fff;
+}
+
 @media (max-width: 1440px) {
   .sidebar {
     padding: 10px;

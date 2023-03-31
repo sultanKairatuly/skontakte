@@ -76,4 +76,13 @@ function closePopup() {
   padding: 3px;
   cursor: pointer;
 }
+
+.dark .modal {
+  background-color: #222;
+}
+
+.dark .close {
+  color: #939393;
+
+}
 </style>

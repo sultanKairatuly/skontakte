@@ -167,4 +167,29 @@ function closePopup(): void {
   display: flex;
   justify-content: space-between;
 }
+
+.dark .popup_title {
+}
+.dark .popup_input {
+}
+
+.dark .label {
+}
+
+.dark .user_profile {
+}
+
+.dark .confirm {
+}
+
+.dark .banner {
+}
+
+.dark .entries {
+  background-color: #222222;
+  border: 1px solid #424242;
+}
+
+.dark .profile_bottom {
+}
 </style>
