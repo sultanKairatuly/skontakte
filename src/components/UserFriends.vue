@@ -5,7 +5,11 @@
       <div class="friends_title title">
         Все друзья {{ props.friends.length }}
       </div>
-      <SkButton label="Найти друзей" @click="$router.push('find-friends')" />
+      <SkButton
+        style="margin-bottom: 20px"
+        label="Найти друзей"
+        @click="$router.push('find-friends')"
+      />
     </header>
     <SkInput
       :model-value="searchFriend"
@@ -95,6 +99,15 @@ function showFriends(friendEmail: string) {
   transition: 0.1s ease-in;
 }
 
+.friends_title {
+  margin-bottom: 20px;
+}
+
+.btn-center {
+  margin: 17px auto;
+  display: block;
+}
+
 .friends-move, /* apply transition to moving elements */
 .friends-enter-active,
 .friends-leave-active {
@@ -107,11 +120,23 @@ function showFriends(friendEmail: string) {
   transform: translateX(30px);
 }
 
+.dark .friends {
+  background-color: #222222;
+  border: 1px solid #424242;
+}
+.dark .title {
+  color: #fff;
+}
+.dark .amount {
+  color: #919099;
+  font-weight: bold;
+}
+
 @media (max-width: 1440px) {
   .friends {
     padding: 8px 18px;
   }
-  .title {
+  .friends_title {
     font-size: 18px;
   }
   .friend {
@@ -126,6 +151,52 @@ function showFriends(friendEmail: string) {
   .friend_item_avatar {
     width: 105px;
     height: 105px;
+    object-fit: cover;
+  }
+  .friend_item_name {
+    margin-bottom: 5px;
+    font-size: 145px;
+  }
+
+  .request_item_btns,
+  .friend_item_btns {
+    display: flex;
+    column-gap: 8px;
+  }
+
+  .friends {
+    margin-top: 20px;
+  }
+  .friends_header {
+    padding: 8px 0;
+    margin: 3px 0;
+  }
+
+  .btn-center {
+    margin: 17px auto;
+    display: block;
+  }
+}
+
+@media (max-width: 800px) {
+  .friends {
+    padding: 4px 12px;
+  }
+  .title {
+    font-size: 16px;
+  }
+  .friend {
+    padding: 6px 0;
+    column-gap: 12px;
+  }
+
+  .friend_item_avatar_container {
+    width: 80px;
+    height: 80px;
+  }
+  .friend_item_avatar {
+    width: 80px;
+    height: 80px;
     object-fit: cover;
   }
   .friend_item_name {
@@ -154,6 +225,16 @@ function showFriends(friendEmail: string) {
   .btn-center {
     margin: 17px auto;
     display: block;
+  }
+}
+
+@media (max-width: 450px) {
+  .friends {
+    padding: 4px 12px;
+    border-radius: 0;
+  }
+  .title {
+    font-size: 18px;
   }
 }
 </style>

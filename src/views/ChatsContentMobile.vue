@@ -1,13 +1,12 @@
 <template>
   <div class="chats_content" v-if="Object.keys(activeChat).length">
     <MessageHeader
-      @goBack="$emit('goBack')"
       :search-text="searchText"
       @update:modelValue="(value) => (searchText = value)"
-      :searching="props.searching"
+      :searching="searchingInput"
       :active-chat="props.activeChat"
-      @searchMessages="$emit('searchMessages')"
-      @cancelSearching="$emit('cancelSearching')"
+      @searchMessages="searchingInput = true"
+      @cancelSearching="searchingInput = false"
       @startSearching="startSearching"
       @clearModelValue="searchText = ''"
       @clearChatHistory="clearChatHistory"
@@ -16,16 +15,18 @@
     <MessageList
       :messages="activeChat.messages"
       v-if="!searching"
-      @deleteMessage="(value) => $emit('deleteMessage', value)"
+      @deleteMessage="
+        (value) => authStore.deleteMessage(currentChat.id, value.id)
+      "
       style="height: 85%"
-      @addImportantMessage="(value) => $emit('addImportantMessage', value)"
+      @addImportantMessage="(value) => authStore.setImportantMessage(value)"
       @removeImportantMessage="
-        (value) => $emit('removeImportantMessage', value)
+        (value) => authStore.removeImportantMessage(value)
       "
     />
     <MessageList :readonly="true" v-else :messages="foundMessages" />
     <MessageManager
-      v-if="!props.activeChat.blocked"
+      v-if="!currentChat.blocked"
       :model-value="message"
       @update:model-value="(newValue) => (message = newValue as string)"
       @sendMessage="sendMessage"
@@ -39,24 +40,15 @@
 
 <script setup lang="ts">
 import type { Chat, Message } from "env";
-import { ref, reactive, watch, onUnmounted } from "vue";
-import MessageList from "./MessageList.vue";
-import MessageManager from "./MessageManager.vue";
-import MessageHeader from "./MessageHeader.vue";
+import { ref, reactive } from "vue";
+import MessageList from "../components/MessageList.vue";
+import MessageManager from "../components/MessageManager.vue";
+import MessageHeader from "../components/MessageHeader.vue";
 import { useAuthStore } from "../stores/auth";
+
 const authStore = useAuthStore();
-
-watch(
-  () => props.activeChat.messages,
-  (val) => {
-    console.log(val);
-  }
-);
-
-setInterval(() => {
-  authStore.refreshChat();
-}, 10000);
-
+const currentChat: Chat = reactive({}) as Chat;
+const searchingInput = ref<boolean>(false);
 const searchText = ref<string>("");
 const message = ref<string>("");
 const searching = ref<boolean>(false);
@@ -88,7 +80,6 @@ const emit = defineEmits<{
   (e: "addImportantMessage", value: Message): void;
   (e: "removeImportantMessage", value: Message): void;
   (e: "deleteMessage", value: string): void;
-  (e: "goBack"): void;
 }>();
 
 const props = defineProps<{
@@ -96,9 +87,55 @@ const props = defineProps<{
   searching: boolean;
 }>();
 
-function sendMessage() {
-  emit("sendMessage", message.value);
-  message.value = "";
+async function sendMessage(message: string) {
+  if (message !== "") {
+    const friendEmail = currentChat.with.email;
+    let docId = "";
+    let docId2 = "";
+    let friendChats = [] as Array<Chat>;
+
+    const querySnapshot = await getDocs(collection(db, "users"));
+    querySnapshot.forEach((doc: any) => {
+      const docEmail = doc.data().email;
+      if (docEmail === friendEmail) {
+        friendChats.push(...doc.data().chats);
+        docId2 = doc.id;
+      } else if (docEmail === authStore.user.email) {
+        docId = doc.id;
+      }
+    });
+    const user = {
+      email: authStore.user.email,
+      name: authStore.user.displayName,
+      photoURL: authStore.user.photoURL,
+    };
+    const newMessage = {
+      from: user,
+      message,
+      id: uuidv4(),
+      createdAt: Date.now(),
+    };
+    authStore.setMessage(activeChat.id, newMessage);
+    const chat = authStore.user.chats.find(
+      (chat: Chat) => chat.id === activeChat.id
+    );
+    Object.assign(activeChat, chat);
+    friendChats = friendChats.map((chat: Chat) => {
+      if (chat.with.email === authStore.user.email) {
+        return { ...chat, messages: [...chat.messages, newMessage] };
+      } else {
+        return chat;
+      }
+    });
+    await updateDoc(doc(db, "users", docId), {
+      chats: authStore.user.chats,
+    });
+
+    await updateDoc(doc(db, "users", docId2), {
+      chats: friendChats,
+    });
+    message.value = "";
+  }
 }
 
 function clearChatHistory() {

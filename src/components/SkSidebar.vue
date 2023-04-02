@@ -76,6 +76,17 @@ const sidebarItems: Array<sidebarItem> = [
   font-size: 18px;
 }
 
+.dark .sidebar {
+  background-color: #222222;
+}
+
+.dark .sidebar_item:hover {
+  background-color: rgb(63, 63, 63);
+}
+.dark .sidebar_item-title {
+  color: #fff;
+}
+
 @media (max-width: 1440px) {
   .sidebar {
     padding: 10px;
@@ -112,6 +123,35 @@ const sidebarItems: Array<sidebarItem> = [
 
   .sidebar_item-title {
     font-size: 12px;
+  }
+}
+
+@media (max-width: 475px) {
+  .sidebar {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 0;
+    border-radius: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 30px;
+    border-top: 1px solid #dce1e6;
+  }
+
+  .sidebar_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sidebar_item-icon {
+    font-size: 18px;
+  }
+
+  .sidebar_item-title {
+    font-size: 11px;
   }
 }
 </style>

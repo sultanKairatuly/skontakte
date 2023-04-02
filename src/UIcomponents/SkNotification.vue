@@ -23,4 +23,10 @@
   font-size: 17px;
   transition: 0.3s ease-in-out;
 }
+
+.message {
+  background-color: #333333;
+  border: 1px solid #424242;
+  color: #fff;
+}
 </style>

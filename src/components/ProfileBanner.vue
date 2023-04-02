@@ -79,7 +79,7 @@
       <div class="helpers">
         <SkButton
           @click="sendFriendRequest"
-          v-if="!includes(props.user, store.user.friends, 'email')"
+          v-if="!includes(props.user, store.user.friendRequestTo, 'email')"
           label="Добавить в друзья"
         />
         <SkButton
@@ -89,7 +89,7 @@
           label="Заявка отправлена"
         />
         <SkButton
-          v-if="includes(props.user, store.user.friends, 'email')"
+          v-if="includes(props.user, store.user.chats, 'email')"
           label="Написать сообщение"
         />
       </div>
@@ -99,7 +99,7 @@
         @close-popup="closeDetailsPopup"
         class="details_modal"
         padding="0px"
-        width="800px"
+        width="500px"
       >
         <template #modal>
           <h3 class="details_title">Подробная информация</h3>
@@ -353,6 +353,10 @@ function showCancelFriendRequestPopup() {
   top: 0;
   left: 0;
 }
+
+.link {
+  align-items: center;
+}
 .details_title {
   font-size: 30px;
   background-color: #f0f4f8;
@@ -463,5 +467,272 @@ function showCancelFriendRequestPopup() {
     font-size: 16px;
     padding: 5px;
   }
+
+  .details_modal {
+  }
+  .details_title {
+    font-size: 23px;
+  }
+  .btns {
+  }
+
+  .personal_item_title {
+    font-size: 16px;
+  }
+  .personal_item_text {
+    font-size: 16px;
+  }
+  .fa-solid {
+    font-size: 15px;
+  }
+  .general_item_title {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 800px) {
+  .banner {
+    height: 250px;
+  }
+  .user {
+    height: 80px;
+    padding: 15px;
+  }
+
+  .user_info {
+    column-gap: 20px;
+  }
+  .user_avatar_wrapper {
+    width: 95px;
+    height: 95px;
+  }
+
+  .user_avatar_box {
+    width: 95px;
+    height: 95px;
+  }
+  .user_avatar {
+    width: 95px;
+    height: 95px;
+  }
+  .user_name {
+    font-size: 18px;
+  }
+  .links {
+    margin-top: 5px;
+    column-gap: 5px;
+  }
+
+  .link {
+    column-gap: 0px;
+  }
+
+  .icon {
+    font-size: 15px;
+  }
+  .link_text {
+    font-size: 14px;
+  }
+
+  .helpers {
+    column-gap: 12px;
+  }
+
+  .dropdown_list {
+    width: 130px;
+    padding: 3px;
+  }
+
+  .dropdown_list-item {
+    font-size: 16px;
+    padding: 5px;
+  }
+}
+
+@media (max-width: 450px) {
+  .banner {
+    height: 250px;
+    border-radius: 0;
+  }
+  .user {
+    height: 60px;
+    padding: 15px;
+  }
+
+  .user_info {
+    column-gap: 20px;
+  }
+  .user_avatar_wrapper {
+    width: 80px;
+    height: 80px;
+  }
+
+  .user_avatar_box {
+    width: 80px;
+    height: 80px;
+  }
+  .user_avatar {
+    width: 80px;
+    height: 80px;
+  }
+  .user_name {
+    font-size: 16px;
+  }
+  .links {
+    margin-top: 3px;
+  }
+
+  .icon {
+    font-size: 13px;
+  }
+  .link_text {
+    font-size: 12px;
+  }
+
+  .helpers {
+    column-gap: 10px;
+  }
+
+  .dropdown_list {
+    width: 110px;
+    margin-bottom: 30px;
+  }
+
+  .dropdown_list-item {
+    font-size: 14px;
+    padding: 1px;
+  }
+}
+
+@media (max-width: 380px) {
+  .banner {
+    height: 250px;
+    border-radius: 0;
+  }
+  .user {
+    height: 60px;
+    padding: 10px;
+  }
+
+  .user_info {
+    column-gap: 8px;
+  }
+  .user_avatar_wrapper {
+    width: 65px;
+    height: 65px;
+  }
+
+  .user_avatar_box {
+    width: 65px;
+    height: 65px;
+  }
+  .user_avatar {
+    width: 65px;
+    height: 65px;
+  }
+  .user_name {
+    font-size: 13px;
+  }
+  .links {
+    margin-top: 3px;
+  }
+
+  .icon {
+    font-size: 10px;
+  }
+  .link_text {
+    font-size: 10px;
+  }
+
+  .helpers {
+    column-gap: 5px;
+  }
+
+  .dropdown_list {
+    width: 90px;
+    margin-bottom: 30px;
+  }
+
+  .dropdown_list-item {
+    font-size: 12px;
+  }
+
+  .details_modal {
+    padding: 0;
+  }
+  .details_title {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .personal {
+    padding: 5px;
+  }
+
+  .personal_item_title {
+    font-size: 14px;
+  }
+
+  .fa-city {
+    font-size: 14px;
+  }
+  .city {
+    font-size: 13px;
+  }
+  .general_item_title {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 320px) {
+  .banner {
+    height: 170px;
+  }
+}
+.dark .banner {
+  border: 1px solid #424242;
+  background-color: #5c5e63;
+}
+.dark .user {
+  background-color: #222222;
+}
+.dark .user_avatar_wrapper {
+  background-color: #222222;
+}
+.dark .dropdown_list {
+  background-color: #292929;
+}
+.dark .text {
+  color: #fff;
+}
+.dark .user_name {
+  color: #fff;
+}
+.dark .link_text {
+  color: #fff;
+}
+
+.dark .details_title {
+  color: #fff;
+  background-color: #333333;
+}
+.dark .personal_item {
+  color: #fff;
+}
+.dark .fa-city {
+  color: #939393;
+}
+.dark .fa-gift {
+  color: #939393;
+}
+.dark .general_item_amount {
+  color: #fff;
+}
+.dark .general_item_title {
+  color: #fff;
+}
+
+.dark .icon {
+  color: #939393;
 }
 </style>

@@ -92,6 +92,7 @@ export type Chat = {
   with: AddedUser;
   messages: Array<Message>;
   id: string;
+  blocked: boolean;
 };
 
 export type User = {
@@ -104,6 +105,7 @@ export type User = {
   gender: string;
   friends: Array<User>;
   chats: Array<Chat>;
+  importantMessages: Array<Messages>
 };
 
 export type Comment = {
@@ -126,3 +128,6 @@ export type UserDB = {
   gender: string;
   chats: Array<Chat>;
 };
+
+export type Theme = 'Светлая' | 'Темная' | 'White' | 'Dark'
+declare module 'vue3-emoji-picker';

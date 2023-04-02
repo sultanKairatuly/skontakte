@@ -4,13 +4,13 @@
     text-color="#346bb4"
     :label="props.label"
     :loading="props.loading"
-    class="btn q-pa-sm text-body2"
+    class="btn q-pa-sm text-capture"
     :icon="props.icon"
-   >
-   <template v-slot:loading>
-          <q-spinner-facebook />
+  >
+    <template v-slot:loading>
+      <q-spinner-facebook />
     </template>
-   </q-btn>
+  </q-btn>
 </template>
 
 <script setup lang="ts">
@@ -18,7 +18,7 @@ const props = withDefaults(
   defineProps<{
     label?: string;
     icon?: string;
-    loading?: boolean
+    loading?: boolean;
   }>(),
   {
     loading: false,
@@ -40,5 +40,28 @@ const props = withDefaults(
 
 .btn:hover {
   background-color: #d3d6da;
+}
+
+.dark .btn {
+  background-color: #424242;
+  color: #fff;
+}
+
+@media (max-width: 1440px) {
+  .btn {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 800px) {
+  .btn {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 450px) {
+  .btn {
+    font-size: 8px;
+  }
 }
 </style>

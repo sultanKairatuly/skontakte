@@ -126,6 +126,10 @@ function changeEntryLink(link: entriesNavItem) {
   border: 2px solid #dce1e6;
 }
 
+.dark .active {
+  color: #fff;
+}
+
 @media (max-width: 1440px) {
   .entries {
     padding: 25px;
@@ -139,6 +143,53 @@ function changeEntryLink(link: entriesNavItem) {
   .nav_item {
     padding: 6px 6px;
     font-size: 16px;
+  }
+}
+
+@media (max-width: 800px) {
+  .entries {
+    padding: 15px;
+  }
+
+  .nav {
+    column-gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .nav_item {
+    padding: 3px 3px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 450px) {
+  .entries {
+    padding: 10px 5px;
+    height: 100%;
+  }
+
+  .nav {
+    justify-content: center;
+    column-gap: 5px;
+    margin-bottom: 10px;
+  }
+
+  .nav_item {
+    padding: 3px 3px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav {
+    justify-content: center;
+    column-gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .nav_item {
+    padding: 5px 5px;
+    font-size: 14px;
   }
 }
 </style>

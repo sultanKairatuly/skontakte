@@ -71,7 +71,7 @@
         <div class="separator"></div>
       </div>
     </div>
-    <div v-else class="no-posts_message">У вас нет постов</div>
+    <NoMessage v-else>У вас нет постов</NoMessage>
     <SkButton
       class="btn"
       :font-size="'18px'"
@@ -91,16 +91,6 @@
         <h3 class="post_title">{{ post.title }}</h3>
         <div class="post_body">{{ post.body }}</div>
         <div class="manage">
-          <div
-            class="manage_item"
-            @click="likePost(post, index)"
-            :class="{
-              liked: postLiked,
-            }"
-          >
-            <i class="fa-solid fa-thumbs-up manage-item_icon"></i>
-            <div class="manage-item_text">{{ post.likes }}</div>
-          </div>
           <div class="manage_item" @click="viewComments">
             <i class="fa-solid fa-comment manage-item_icon"></i>
             <div class="manage-item_text">{{ post.comments.length }}</div>
@@ -115,7 +105,10 @@
         >
           <template v-slot:before>
             <q-avatar>
-              <img class="q-avatar" :src="getImageUrl(authStore.user.photoURL)" />
+              <img
+                class="q-avatar"
+                :src="getImageUrl(authStore.user.photoURL)"
+              />
             </q-avatar>
           </template>
 
@@ -156,9 +149,7 @@
         <div class="separator"></div>
       </div>
     </div>
-    <div class="no-posts_message" v-else>
-      У {{ props.user.name }} нет постов
-    </div>
+    <NoMessage v-else>У {{ props.user.name }} нет постов</NoMessage>
   </div>
 </template>
 
@@ -217,12 +208,6 @@ function viewComments() {
 </script>
 
 <style scoped>
-.no-posts_message {
-  font-size: 20px;
-  color: #9f9f9f;
-  margin: 20px 0;
-  text-align: center;
-}
 .btn {
   display: block;
   margin: 10px auto;
@@ -255,7 +240,7 @@ function viewComments() {
   font-weight: 500;
 }
 
-.q-avatar{
+.q-avatar {
   object-fit: cover;
   width: 30px;
   height: 30px;
@@ -328,19 +313,89 @@ function viewComments() {
   width: 100%;
   word-wrap: break-word;
 }
+@media (max-width: 1440px) {
+  .post_title {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  .q-avatar {
+    object-fit: cover;
+    width: 27px;
+    height: 27px;
+  }
 
-.liked .manage-item_icon {
-  color: #fff;
-}
-.liked .manage-item_text {
-  color: #fff;
+  .post_body {
+    font-size: 16px;
+  }
+
+  .manage-item_icon {
+    color: #808b98;
+    font-size: 18px;
+  }
+
+  .manage-item_text {
+    color: #808b98;
+    font-size: 14px;
+  }
+
+  .comment_photo_container {
+    width: 40px;
+    height: 40px;
+  }
+  .comment_photo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .comment_author {
+    font-size: 17px;
+  }
+
+  .comment_message {
+    font-size: 15px;
+  }
 }
 
-.liked {
-  background-color: rgb(226, 32, 32);
-}
+@media (max-width: 800px) {
+  .post_title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .q-avatar {
+    object-fit: cover;
+    width: 27px;
+    height: 27px;
+  }
 
-.liked:hover {
-  background-color: rgb(226, 32, 32);
+  .post_body {
+    font-size: 15px;
+  }
+
+  .manage-item_icon {
+    color: #808b98;
+    font-size: 16px;
+  }
+
+  .manage-item_text {
+    color: #808b98;
+    font-size: 13px;
+  }
+
+  .comment_photo_container {
+    width: 40px;
+    height: 40px;
+  }
+  .comment_photo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .comment_author {
+    font-size: 16px;
+  }
+
+  .comment_message {
+    font-size: 13px;
+  }
 }
 </style>

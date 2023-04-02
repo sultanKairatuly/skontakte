@@ -2,14 +2,14 @@
   <div class="wrapper" @mousedown="closePopup">
     <div class="modal" @mousedown.stop>
       <i class="fa-sharp close fa-solid fa-xmark" @click="closePopup"></i>
-      <div
-        class="pad-wrapper"
-        :style="{
-          width: props.width,
-          padding: props.padding,
-        }"
-      >
-        <slot name="modal"></slot>
+      <div class="pad-wrapper">
+        <slot
+          name="modal"
+          :style="{
+            width: props.width,
+            padding: props.padding,
+          }"
+        ></slot>
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@ const props = withDefaults(
   }>(),
   {
     padding: "40px 30px",
-    width: "auto",
+    width: "80%",
   }
 );
 
@@ -65,6 +65,8 @@ function closePopup() {
   position: relative;
   background-color: #fff;
   border-radius: 10px;
+  width: 70%;
+  max-width: 800px;
 }
 
 .close {
@@ -75,5 +77,25 @@ function closePopup() {
   position: absolute;
   padding: 3px;
   cursor: pointer;
+}
+
+.dark .modal {
+  background-color: #222;
+}
+
+.dark .close {
+  color: #939393;
+}
+
+@media (max-width: 1440px) {
+  .close {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 1440px) {
+  .close {
+    font-size: 20px;
+  }
 }
 </style>

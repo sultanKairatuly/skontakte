@@ -35,11 +35,13 @@
           <div class="dropdown"></div>
         </div>
         <ProfileDropdown
+          :theme="props.theme"
           @click.stop
           v-if="isProfileDropDown"
-          :dropdown-list="dropdownListItems"
-          @listItemClicked="handleListItemClicked"
-          @close-profile-dropdown="closeProfileDropdown"
+          @closeProfileDropdown="closeProfileDropdown"
+          @openUserProfile="openProfileDropdown"
+          @changeTheme="changeTheme"
+          @logout="logout"
         />
       </div>
       <div v-else>регистрация</div>
@@ -48,9 +50,8 @@
 </template>
 
 <script setup lang="ts">
-import type { profileListItem, UserDB } from "env";
+import type { UserDB, Theme } from "env";
 import ProfileDropdown from "./ProfileDropdown.vue";
-import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "@/stores/auth";
 import { ref, reactive, watch } from "vue";
 import { getDocs, collection } from "firebase/firestore";
@@ -65,6 +66,14 @@ document.addEventListener("click", (e: Event) => {
   }
 });
 
+const emit = defineEmits<{
+  (e: "changeTheme", value: Theme): void;
+}>();
+
+const props = defineProps<{
+  theme: any;
+}>();
+
 const { includes } = useImageGetter();
 const isMenu = ref<boolean>(false);
 const router = useRouter();
@@ -72,26 +81,6 @@ const users: Array<UserDB> = reactive([]);
 const search = ref<string>("");
 const store = useAuthStore();
 const isProfileDropDown = ref<boolean>(false);
-const dropdownListItems: Array<profileListItem> = [
-  {
-    icon: "fa-solid fa-gear",
-    title: "Настройки",
-    action: goSettings,
-    id: uuidv4(),
-  },
-  {
-    icon: "fa-solid fa-palette",
-    title: "Тема",
-    action: changeTheme,
-    id: uuidv4(),
-  },
-  {
-    icon: "fa-solid fa-arrow-right-from-bracket",
-    title: "Выйти",
-    action: logOut,
-    id: uuidv4(),
-  },
-];
 
 watch(users, (nv) => {
   if (Object.keys(nv).length > 0) {
@@ -101,32 +90,16 @@ watch(users, (nv) => {
   }
 });
 
-function goSettings() {
-  console.log("settings");
-}
-
-function changeTheme() {
-  console.log("changeTheme");
-}
-
-function logOut() {
-  store.logoutUser();
-}
-
-function handleListItemClicked(list: profileListItem): void {
-  dropdownListItems.forEach((listItem) => {
-    if (list.id === listItem.id) {
-      listItem.action();
-      isProfileDropDown.value = false;
-    }
-  });
-}
-
 function openProfileDropdown() {
   isProfileDropDown.value = !isProfileDropDown.value;
 }
 
 function closeProfileDropdown() {
+  isProfileDropDown.value = false;
+}
+
+function logout() {
+  store.logoutUser();
   isProfileDropDown.value = false;
 }
 
@@ -156,6 +129,12 @@ function viewProfile(userEmail: string) {
   isMenu.value = false;
   router.push(`/user/${userEmail}`);
   search.value = "";
+}
+
+function changeTheme(theme: Theme) {
+  console.log(theme, " Header theme");
+  emit("changeTheme", theme);
+  isProfileDropDown.value = false;
 }
 </script>
 
@@ -264,6 +243,7 @@ function viewProfile(userEmail: string) {
   border-right: none;
   transform: rotate(225deg);
 }
+
 .user {
   align-items: center;
   display: flex;
@@ -295,9 +275,6 @@ function viewProfile(userEmail: string) {
     margin: 0 auto;
     font-size: 12.5px;
     padding: 0 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
   }
   .header__logo {
     font-size: 23px;
@@ -311,33 +288,257 @@ function viewProfile(userEmail: string) {
   .profile {
     padding: 2px;
   }
-
-  .profile:hover {
-    background-color: #edeef0;
-  }
-
   .dropdown {
     width: 8px;
     height: 8px;
-    border: 3px solid #aeb7c2;
-    border-bottom: none;
-    border-right: none;
-    transform: rotate(225deg);
   }
   .user {
-    align-items: center;
-    display: flex;
     padding: 2px;
     column-gap: 15px;
   }
   .avatar_wrapper {
     border-radius: 50%;
-    overflow: hidden;
   }
 
   .avatar {
     width: 35px;
     height: 35px;
   }
+
+  .menu {
+    padding: 10px 0;
+    width: 270px;
+  }
+}
+
+@media (max-width: 800px) {
+  .header {
+    padding: 0;
+  }
+
+  .dropdown_menu {
+    position: absolute;
+    left: -150%;
+    bottom: -165px;
+  }
+
+  .header__content {
+    margin: 0 auto;
+    font-size: 10px;
+    padding: 0 10px;
+  }
+  .header__logo {
+    font-size: 20px;
+  }
+  .search {
+    padding: 3px 30px;
+    font-size: 16px;
+    background-size: 16px 16px;
+  }
+
+  .profile {
+    padding: 2px;
+  }
+  .dropdown {
+    width: 5px;
+    height: 5px;
+  }
+  .user {
+    padding: 2px;
+    column-gap: 15px;
+  }
+  .avatar_wrapper {
+    border-radius: 50%;
+  }
+
+  .avatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  .menu {
+    padding: 5px 0;
+    width: 240px;
+  }
+
+  .user {
+    padding: 2px 7px;
+  }
+
+  .user_avatar {
+    width: 40px;
+    object-fit: cover;
+    height: 40px;
+  }
+  .user_name {
+    font-size: 15px;
+    color: #2d5a86;
+    font-weight: bold;
+  }
+
+  .user_avatar_container {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 450px) {
+  .dropdown_menu {
+    position: absolute;
+    left: -150%;
+    bottom: -155px;
+  }
+
+  .header__content {
+    margin: 0 auto;
+    font-size: 8px;
+    padding: 0 5px;
+  }
+  .header__logo {
+    font-size: 18px;
+  }
+  .search {
+    padding: 3px 30px;
+    font-size: 14px;
+    background-size: 16px 16px;
+    width: 200px;
+  }
+
+  .profile {
+    padding: 2px;
+  }
+  .dropdown {
+    width: 6px;
+    height: 6px;
+  }
+  .user {
+    padding: 2px;
+    column-gap: 10px;
+  }
+  .avatar_wrapper {
+    border-radius: 50%;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .menu {
+    padding: 5px 0;
+    width: 200px;
+  }
+
+  .user {
+    padding: 2px 5px;
+  }
+
+  .user_avatar {
+    width: 35px;
+    object-fit: cover;
+    height: 35px;
+  }
+  .user_name {
+    font-size: 13px;
+    color: #2d5a86;
+    font-weight: bold;
+  }
+
+  .user_avatar_container {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 320px) {
+  .dropdown_menu {
+    position: absolute;
+    left: -150%;
+    bottom: -145px;
+  }
+
+  .header__content {
+    margin: 0 auto;
+    font-size: 8px;
+    column-gap: 5px;
+  }
+  .header__logo {
+    font-size: 15px;
+  }
+  .search {
+    padding: 3px 30px;
+    font-size: 12px;
+    background-size: 16px 16px;
+    width: 150px;
+  }
+
+  .avatar_wrapper {
+    border-radius: 50%;
+  }
+
+  .avatar {
+    width: 27px;
+    height: 27px;
+  }
+
+  .menu {
+    padding: 5px 0;
+    width: 150px;
+  }
+
+  .user {
+    padding: 2px 5px;
+  }
+
+  .user_avatar {
+    width: 30px;
+    object-fit: cover;
+    height: 30px;
+  }
+  .user_name {
+    font-size: 12px;
+    color: #2d5a86;
+    font-weight: bold;
+  }
+
+  .user_avatar_container {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.dark .header {
+  background-color: #222222;
+  border-bottom: 1px solid #292929;
+}
+.dark .header__logo {
+  color: #fff;
+}
+
+.dark .search {
+  background-color: #424242;
+  color: #fff;
+}
+.dark .menu {
+  background-color: #292929;
+}
+.dark .user {
+  background-color: #222222;
+}
+
+.dark .user:hover {
+  background-color: #292929;
+}
+
+.dark .user_name {
+  color: #fff;
+}
+
+.dark .profile {
+  background-color: #222222;
+}
+
+.dark .profile:hover {
+  background-color: #292929;
 }
 </style>

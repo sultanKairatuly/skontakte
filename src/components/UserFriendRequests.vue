@@ -90,6 +90,19 @@ function cancelFriendRequest() {}
   flex-direction: column;
 }
 
+.dark .requests {
+  background-color: #222222;
+  border: 1px solid #424242;
+}
+.dark .title {
+  color: #fff;
+  font-size: 20px;
+}
+.dark .amount {
+  color: #aaa9ad;
+  font-weight: bold;
+}
+
 @media (max-width: 1440px) {
   .requests {
     padding: 7px 17px;
@@ -97,6 +110,28 @@ function cancelFriendRequest() {}
   }
   .title {
     font-size: 18px;
+  }
+}
+
+@media (max-width: 800px) {
+  .requests {
+    padding: 7px 17px;
+    width: 68%;
+  }
+  .title {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 800px) {
+  .requests {
+    padding: 7px 17px;
+    border-radius: 0px;
+    height: 100%;
+    width: 100%;
+  }
+  .title {
+    font-size: 16px;
   }
 }
 </style>

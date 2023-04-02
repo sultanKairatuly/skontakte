@@ -111,4 +111,68 @@ const props = defineProps<{
     margin: 10px 0;
   }
 }
+
+@media (max-width: 800px) {
+  .request {
+    padding: 6px 0;
+    column-gap: 10px;
+  }
+
+  .request_item_avatar_container {
+    width: 85px;
+    height: 85px;
+  }
+  .request_item_avatar {
+    width: 85px;
+    height: 85px;
+  }
+  .request_item_name {
+    margin-bottom: 3px;
+    font-size: 14px;
+  }
+  .request_item_btns {
+    display: flex;
+    column-gap: 3px;
+  }
+
+  .no-requests-message {
+    margin: 15px auto;
+    padding: 10px;
+    font-size: 18px;
+  }
+
+  .btn {
+    display: block;
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 450px) {
+  .request {
+    padding: 6px 0;
+    column-gap: 15px;
+  }
+
+  .request_item_avatar_container {
+    width: 65px;
+    height: 65px;
+  }
+  .request_item_avatar {
+    width: 65px;
+    height: 65px;
+  }
+  .request_item_name {
+    margin-bottom: 3px;
+    font-size: 15px;
+  }
+  .request_item_btns {
+    display: flex;
+    column-gap: 6px;
+  }
+
+  .btn {
+    display: block;
+    margin: 10px 0;
+  }
+}
 </style>

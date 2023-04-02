@@ -13,6 +13,7 @@
     </KeepAlive>
     <FriendTabs
       :tabs="tabs"
+      clas="tabs"
       :badges="badges"
       @changeActiveComponent="changeActiveComponent"
     />
@@ -75,7 +76,7 @@ function changeActiveComponent(component: ComponentOptions) {
 }
 
 .component {
-  width: 80%;
+  width: 78%;
   height: fit-content;
 }
 
@@ -90,7 +91,19 @@ function changeActiveComponent(component: ComponentOptions) {
 
 @media (max-width: 1440px) {
   .component {
-    width: 68%;
+    width: 71%;
+  }
+}
+
+@media (max-width: 450px) {
+  .container {
+    padding-top: 50px;
+    padding-bottom: 19px;
+  }
+
+  .component {
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

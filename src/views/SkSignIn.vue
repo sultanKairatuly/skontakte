@@ -139,6 +139,18 @@ async function login(e: Event) {
   margin: 15px 0;
 }
 
+.dark .title {
+  color: #fff;
+}
+.dark .content {
+  background-color: #222222;
+}
+
+.dark .input {
+  margin: 15px 0;
+  width: 100%;
+}
+
 @media (max-width: 1440px) {
   .title {
     margin: 28px 0;
@@ -166,6 +178,62 @@ async function login(e: Event) {
   .info {
     opacity: 0.7;
     font-size: 15px;
+    text-align: center;
+    margin: 15px 0;
+  }
+}
+
+@media (max-width: 800px) {
+  .title {
+    margin: 24px 0;
+    font-size: 24px;
+  }
+  .content {
+    padding: 28px 48px;
+    width: 400px;
+  }
+
+  .login {
+    font-size: 16px;
+    padding: 5px;
+  }
+
+  .register {
+    font-size: 16px;
+    padding: 5px;
+  }
+
+  .info {
+    opacity: 0.7;
+    font-size: 13px;
+    text-align: center;
+    margin: 15px 0;
+  }
+}
+
+@media (max-width: 450px) {
+  .title {
+    margin: 20px 0;
+    font-size: 20px;
+  }
+  .content {
+    padding: 20px;
+    width: 300px;
+  }
+
+  .login {
+    font-size: 14px;
+    padding: 5px;
+  }
+
+  .register {
+    font-size: 14px;
+    padding: 5px;
+  }
+
+  .info {
+    opacity: 0.7;
+    font-size: 11px;
     text-align: center;
     margin: 15px 0;
   }

@@ -23,6 +23,10 @@ const props = defineProps<{
   chats: Array<Chat>;
   activeChat: Chat;
 }>();
+
+const emit = defineEmits<{
+  (e: "chooseChat", value: Chat): void;
+}>();
 </script>
 
 <style scoped>
@@ -31,5 +35,9 @@ const props = defineProps<{
   display: flex;
   flex-direction: column;
   background-color: #fff;
+}
+
+.dark .chats_items {
+  background-color: #222222;
 }
 </style>

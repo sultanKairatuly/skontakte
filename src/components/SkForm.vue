@@ -26,4 +26,10 @@
   column-gap: 30px;
   align-items: flex-start;
 }
+
+@media (max-width: 800px) {
+  .main {
+    flex-direction: column;
+  }
+}
 </style>

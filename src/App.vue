@@ -1,6 +1,11 @@
 <template>
-  <div class="app">
-    <SkHeader />
+  <div
+    class="app"
+    :class="{
+      dark: isDark,
+    }"
+  >
+    <SkHeader :theme="theme" @changeTheme="changeTheme" />
     <div class="app_layout">
       <SkSidebar v-if="Object.keys(authStore.user).length > 0" />
       <router-view @changesSaved="changesSaved"></router-view>
@@ -18,14 +23,20 @@ import SkHeader from "./components/SkHeader.vue";
 import SkSidebar from "./components/SkSidebar.vue";
 import SkNotification from "./UIcomponents/SkNotification.vue";
 import { useAuthStore } from "./stores/auth";
-import { ref } from "vue";
+import { ref, provide } from "vue";
 import { usePhotoStore } from "./stores/photo";
-
+import type { Theme } from "env";
+import { useQuasar } from "quasar";
 const authStore = useAuthStore();
 const photosStore = usePhotoStore();
-
+const isDark = ref<boolean>(false);
 const isSavedMessage = ref<boolean>(false);
 
+const theme =
+  ref<Theme>(localStorage.getItem("theme") as Theme) || ref<Theme>("Светлая");
+const $q = useQuasar();
+changeTheme(theme.value);
+provide("isDark", isDark);
 
 if (Object.keys(authStore.user).length > 0) {
   authStore.refreshUser();
@@ -37,6 +48,18 @@ function changesSaved() {
   setTimeout(() => {
     isSavedMessage.value = false;
   }, 1000);
+}
+
+function changeTheme(them: Theme) {
+  theme.value = them as Theme;
+  if (theme.value === "Dark" || theme.value === "Темная") {
+    isDark.value = true;
+    $q.dark.set(true);
+  } else {
+    isDark.value = false;
+    $q.dark.set(false);
+  }
+  localStorage.setItem("theme", theme.value);
 }
 </script>
 
@@ -51,6 +74,7 @@ function changesSaved() {
 .app {
   position: relative;
   background-color: #edeef0;
+  overflow: hidden;
 }
 
 .container {
@@ -67,7 +91,13 @@ function changesSaved() {
   padding: 125px 0;
 }
 
+.dark {
+  background-color: #141414;
+}
 
+.dark .container {
+  background-color: #141414;
+}
 
 .savedMessage-enter-active,
 .savedMessage-leave-active {
@@ -87,17 +117,29 @@ function changesSaved() {
   .app_layout {
     max-width: 1450px;
     padding: 65px 0;
-}
+  }
 }
 
 @media (max-width: 1000px) {
   .container {
-    width: 80%;
+    width: 75%;
   }
 
   .app_layout {
     max-width: 1450px;
     padding: 65px 0;
+  }
 }
-} 
+
+@media (max-width: 450px) {
+  .container {
+    padding: 0;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .app_layout {
+    padding: 41px 0;
+  }
+}
 </style>

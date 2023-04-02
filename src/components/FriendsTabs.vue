@@ -63,7 +63,7 @@ defineEmits<{
 
 <style scoped>
 .tabs {
-  width: 27%;
+  width: 20%;
   background-color: #fff;
   padding: 15px 20px;
   border-radius: 20px;
@@ -118,14 +118,100 @@ defineEmits<{
   color: red;
 }
 
+.dark .tabs {
+  background-color: #222222;
+  border: 1px solid #424242;
+}
+
+.dark .tab_item:hover {
+  background-color: #444444;
+}
+
+.dark .title {
+  color: #fff;
+}
+
 @media (max-width: 1440px) {
   .tabs {
-    width: 30%;
+    width: 27%;
+  }
+
+  .banner {
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 10px;
   }
 
   .title {
     font-size: 14px;
     margin-left: 10px;
+    line-height: 15px;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .tab_item {
+    padding: 7px;
+    font-size: 15px;
+  }
+
+  .user_avatar {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 800px) {
+  .tabs {
+    width: 27%;
+  }
+
+  .title {
+    font-size: 12px;
+    margin-left: 5px;
+    margin-top: 5px;
+  }
+
+  .tab_item {
+    padding: 7px;
+    font-size: 12px;
+  }
+
+  .user_avatar {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 450px) {
+  .tabs {
+    width: 100%;
+    display: flex;
+    position: absolute;
+    top: 40px;
+    border-radius: 0;
+    left: 0;
+  }
+
+  .title {
+    font-size: 12px;
+    margin-left: 5px;
+    margin-top: 5px;
+  }
+
+  .tab_item {
+    padding: 7px;
+    font-size: 12px;
+  }
+
+  .user_avatar_container {
+    width: 30px;
+    height: 30px;
+  }
+
+  .user_avatar {
+    width: 30px;
+    height: 30px;
   }
 }
 </style>

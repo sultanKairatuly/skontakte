@@ -24,7 +24,7 @@ const props = withDefaults(
     fontSize?: string;
   }>(),
   {
-    fontSize: "18px",
+    fontSize: "16px",
   }
 );
 
@@ -48,5 +48,17 @@ function updateModel(e: Event) {
   border-radius: 10px;
   margin-top: 10px;
   margin-bottom: 25px;
+}
+
+.dark .select {
+  border: 1px solid #424242;
+  color: #ffff;
+  background-color: #222222;
+}
+
+@media (max-width: 320px) {
+  .select {
+    font-size: 10px;
+  }
 }
 </style>

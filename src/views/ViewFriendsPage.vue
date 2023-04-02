@@ -127,7 +127,25 @@ async function fetchUserFriends() {
 
 @media (max-width: 1440px) {
   .component {
-    width: 68%;
+    width: 71%;
   }
 }
+
+@media (max-width: 450px) {
+  .container {
+    padding-top: 80px;
+    padding-bottom: 19px;
+  }
+
+  .component {
+    width: 100%;
+    height: 100%;
+  }
+
+  .loader_wrapper {
+    border-radius: 0;
+  }
+}
+
+
 </style>

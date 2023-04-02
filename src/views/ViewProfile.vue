@@ -90,4 +90,74 @@ const userComputed = computed(() => {
 .entries {
   width: 59%;
 }
+
+.dark .entries {
+  background-color: #33333333;
+  border: 1px solid #424242;
+}
+
+@media (max-width: 1440px) {
+  .popup_title {
+    font-size: 18px;
+  }
+  .popup_input {
+    margin: 40px auto;
+  }
+
+  .label {
+    margin-top: 10px;
+    font-size: 18px;
+  }
+
+  .banner {
+    margin-bottom: 25px;
+  }
+
+  .entries {
+    width: 58%;
+  }
+}
+
+@media (max-width: 450px) {
+  .popup_title {
+    font-size: 15px;
+  }
+  .popup_input {
+    margin: 40px auto;
+  }
+
+  .label {
+    margin-top: 10px;
+    font-size: 18px;
+  }
+
+  .banner {
+    margin-bottom: 0;
+  }
+
+  .entries {
+    width: 60%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .user_information {
+    height: 100%;
+  }
+
+  .profile_bottom {
+    height: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .profile_bottom {
+    flex-direction: column;
+    height: 80%;
+  }
+
+  .entries {
+    width: 100%;
+  }
+}
 </style>

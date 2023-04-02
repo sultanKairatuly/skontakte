@@ -16,49 +16,16 @@
       />
     </div>
   </div>
-  <Teleport to=".app" v-if="isPopup">
-    <SkPopup @close-popup="closePopup">
-      <template #modal>
-        <h3 class="popup_title">
-          Поставьте свое реальное фото,чтобы вашим друзьям было легче вас найти
-        </h3>
-        <div class="label">URL фото:</div>
-        <SkInput
-          class="popup_input"
-          :modelValue="photoURL"
-          @update:modelValue="(newValue) => (photoURL = newValue as string)"
-          :type="'text'"
-          :placeholder="'Введите URL фото'"
-        />
-        <SkButton
-          class="confirm"
-          :font-size="'22px'"
-          :padding="'10px 40px'"
-          @click="changeProfilePhoto"
-          >Изменить</SkButton
-        >
-      </template>
-    </SkPopup>
-  </Teleport>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import SkInput from "@/UIcomponents/SkInput.vue";
-import SkPopup from "@/UIcomponents/SkPopup.vue";
-import SkButton from "@/UIcomponents/SkButton.vue";
+import { ref } from "vue";
 import ProfileBanner from "@/components/ProfileBanner.vue";
 import { useAuthStore } from "../stores/auth";
 import ProfileEntries from "../components/ProfileEntries.vue";
 import UserInformation from "../components/UserInformation.vue";
-import type { User, UserDB } from "env";
-import {
-  getDocs,
-  doc,
-  updateDoc,
-  arrayUnion,
-  collection,
-} from "firebase/firestore";
+import type { UserDB } from "env";
+import { getDocs, doc, updateDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase";
 
 const isProfilePhotoLoading = ref<boolean>(false);
@@ -166,5 +133,93 @@ function closePopup(): void {
 .profile_bottom {
   display: flex;
   justify-content: space-between;
+}
+
+/* .dark .popup_title {
+}
+.dark .popup_input {
+}
+
+.dark .label {
+}
+
+.dark .user_profile {
+}
+
+.dark .confirm {
+}
+
+.dark .banner {
+} */
+
+.dark .entries {
+  background-color: #222222;
+  border: 1px solid #424242;
+}
+
+@media (max-width: 1440px) {
+  .popup_title {
+    font-size: 18px;
+  }
+  .popup_input {
+    margin: 40px auto;
+  }
+
+  .label {
+    margin-top: 10px;
+    font-size: 18px;
+  }
+
+  .banner {
+    margin-bottom: 25px;
+  }
+
+  .entries {
+    width: 58%;
+  }
+}
+
+@media (max-width: 450px) {
+  .popup_title {
+    font-size: 15px;
+  }
+  .popup_input {
+    margin: 40px auto;
+  }
+
+  .label {
+    margin-top: 10px;
+    font-size: 18px;
+  }
+
+  .banner {
+    margin-bottom: 0;
+  }
+
+  .entries {
+    width: 60%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .user_information {
+    height: 100%;
+    background-color: #fff;
+  }
+
+  .profile_bottom {
+    height: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .profile_bottom {
+    flex-direction: column;
+    height: 80%;
+  }
+
+  .entries {
+    width: 100%;
+  }
 }
 </style>

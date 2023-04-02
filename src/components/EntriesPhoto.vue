@@ -18,7 +18,7 @@
           />
         </div>
       </div>
-      <div v-else class="no-photo_message">У вас нет фото</div>
+      <NoMessage v-else>У вас нет фото</NoMessage>
       <div class="btns">
         <SkButton
           :font-size="'18px'"
@@ -54,9 +54,7 @@
           />
         </div>
       </div>
-      <div v-else class="no-photo_message">
-        У {{ props.user.name }} нет фото
-      </div>
+      <NoMessage v-else>У {{ props.user.name }} нет фото</NoMessage>
     </div>
     <SkLoader v-if="props.loading" />
   </div>
@@ -77,7 +75,6 @@
             @update:model-value="(newValue) => (photoDescription = newValue as string)"
           />
           <q-separator size="2px" q-pa="sm" />
-
         </div>
         <SkButton class="publish" @click="publish" label="Опубликовать" />
       </template>
@@ -188,13 +185,13 @@ async function publish() {
 
 .user-image {
   width: 100%;
-  height: 200px;
+  height: 150px;
   cursor: pointer;
   object-fit: cover;
 }
 
 .modal {
-  padding: 10px;
+  padding: 20px;
 }
 
 .modal_title {
@@ -207,13 +204,6 @@ async function publish() {
   object-fit: cover;
   margin: 20px auto;
   display: block;
-}
-
-.no-photo_message {
-  font-size: 20px;
-  color: #9f9f9f;
-  margin: 20px 0;
-  text-align: center;
 }
 
 .btns {
@@ -256,5 +246,63 @@ async function publish() {
 .modal-leave-to {
   opacity: 0;
   transform: translateX(30px);
+}
+
+@media (max-width: 450px) {
+  .user-image_container {
+    width: 80px;
+  }
+
+  .user-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .modal_title {
+    font-size: 20px;
+  }
+  .modal_image_container {
+  }
+  .modal_image {
+    width: 150px;
+    height: 150px;
+  }
+  .extra-info {
+  }
+  .publish {
+    display: block;
+    margin: 10px auto;
+  }
+}
+
+@media (max-width: 320px) {
+  .modal_title {
+    font-size: 18px;
+    margin: 20px 0 0 0;
+  }
+
+  .modal_image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .publish {
+    display: block;
+    margin: 10px auto;
+  }
+}
+
+.dark .entries {
+  background-color: #222222;
+}
+
+.dark .content {
+  background-color: #222222;
+}
+.dark .loader-wrapper {
+  background-color: #222222;
+}
+.dark .images {
+  background-color: #222222;
 }
 </style>

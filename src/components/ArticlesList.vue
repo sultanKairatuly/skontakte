@@ -6,9 +6,9 @@
         :editing="props.editing"
         :article="article"
         :key="article.id"
-        @deleteArticle="(value) => $emit('deleteArticle', value)"
-        @editArticle="(value) => $emit('editArticle')"
-        @saveEdits="(value) => $emit('saveEdits', value)"
+        @deleteArticle="(value: string) => $emit('deleteArticle', value)"
+        @editArticle="(value: string) => $emit('editArticle', value)"
+        @saveEdits="(value: string) => $emit('saveEdits', value)"
       />
     </TransitionGroup>
   </div>
@@ -21,7 +21,13 @@ import ArticleItem from "./ArticleItem.vue";
 
 const props = defineProps<{
   articles: Array<Article>;
-  editing: boolean;
+  editing: string;
+}>();
+
+defineEmits<{
+  (e: "deleteArticle", value: string): void;
+  (e: "saveEdits", value: string): void;
+  (e: "saveEdits", value: string): void;
 }>();
 </script>
 

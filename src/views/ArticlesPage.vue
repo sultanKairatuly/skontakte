@@ -7,6 +7,7 @@
       <SkLoader />
     </div>
     <ArticleList
+      v-else
       :articles="articles"
       :editing="editing"
       @deleteArticle="deleteArticle"
@@ -18,15 +19,15 @@
     <div class="title">
       Мои статьи
       <span class="amount">{{ authStore.user.articles.length }}</span>
-      <ArticleList
-        v-if="authStore.user.articles"
-        :articles="authStore.user.articles"
-        :editing="editing"
-        @deleteArticle="deleteArticle"
-        @saveEdits="saveEdits"
-        @editArticle="editArticle"
-      />
     </div>
+    <ArticleList
+      v-if="authStore.user.articles"
+      :articles="authStore.user.articles"
+      :editing="editing"
+      @deleteArticle="deleteArticle"
+      @saveEdits="saveEdits"
+      @editArticle="editArticle"
+    />
   </div>
 </template>
 
@@ -35,20 +36,19 @@ import { reactive, ref, watch, computed } from "vue";
 import type { Article } from "env";
 import { getDocs, collection, updateDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
-import { useImageGetter } from "@/composables/utilities";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../stores/auth";
 import SkLoader from "../components/SkLoader.vue";
 import ArticleList from "../components/ArticlesList.vue";
 
-const editing = ref<boolean>(false);
+const editing = ref<string>("");
 const loading = ref<boolean>(false);
 const authStore = useAuthStore();
 const route = useRoute();
 const loadOtherArticles = computed(() => {
   return !route.path.includes("my") ? true : false;
 });
-const { getImageUrl, timeSince } = useImageGetter();
+
 const articles: Array<Article> = reactive([]);
 
 if (loadOtherArticles) {
@@ -87,12 +87,12 @@ async function deleteArticle(id: string) {
   });
 }
 
-function editArticle() {
-  editing.value = true;
+function editArticle(id: string) {
+  editing.value = id;
 }
 
 async function saveEdits(id: string) {
-  editing.value = false;
+  editing.value = "";
   localStorage.setItem("user", JSON.stringify(authStore.user));
   let docId: string = "";
   const querySnapshot = await getDocs(collection(db, "users"));
@@ -102,9 +102,11 @@ async function saveEdits(id: string) {
     }
   });
 
-  await updateDoc(doc(db, "users", docId), {
+  updateDoc(doc(db, "users", docId), {
     articles: authStore.user.articles,
   });
+
+  console.log("updated");
 }
 </script>
 
@@ -115,6 +117,7 @@ async function saveEdits(id: string) {
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid #dce1e6;
+  background-color: #000;
 }
 .title {
   font-size: 25px;
@@ -129,5 +132,52 @@ async function saveEdits(id: string) {
   font-weight: bold;
   color: #2a5885;
   font-size: 25px;
+}
+
+.dark .title {
+  border: 1px solid #424242;
+  background-color: #222222;
+  color: #fff;
+}
+
+.dark .amount {
+  color: gray;
+}
+
+@media (max-width: 1440px) {
+  .title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .amount {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  .title {
+    font-size: 17px;
+    margin-bottom: 10px;
+  }
+
+  .amount {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 450px) {
+  .title {
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+
+  .amount {
+    font-size: 17px;
+  }
+
+  .wrapper {
+    border-radius: 0;
+  }
 }
 </style>

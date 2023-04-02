@@ -25,7 +25,7 @@
       class="q-pa-sm dropdown"
       dropdown-icon="fa-solid fa-ellipsis"
     >
-      <q-list>
+      <q-list class="list">
         <q-item
           clickable
           @click="$emit('removeFriend', props.friend.email)"
@@ -107,8 +107,6 @@ const { getImageUrl } = useImageGetter();
   padding: 10px 0;
   margin: 5px 0;
 }
-.no-friends-message {
-}
 
 .btn {
   display: block;
@@ -122,5 +120,82 @@ const { getImageUrl } = useImageGetter();
   position: absolute;
   top: 20px;
   right: 20px;
+}
+
+.dark .friend_item_name {
+  color: #fff;
+}
+
+.dark .dropdown {
+  color: #fff;
+}
+
+@media (max-width: 1440px) {
+  .friend {
+    padding: 12px 0;
+    column-gap: 17px;
+  }
+
+  .friend_item_avatar_container {
+    width: 90px;
+    height: 90px;
+  }
+  .friend_item_avatar {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+  }
+  .friend_item_name {
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+
+  .friends {
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 800px) {
+  .friend {
+    padding: 4px 0;
+    column-gap: 7px;
+  }
+
+  .friend_item_avatar_container {
+    width: 70px;
+    height: 70px;
+  }
+  .friend_item_avatar {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+  }
+  .friend_item_name {
+    margin-bottom: 5px;
+    font-size: 15px;
+  }
+
+}
+
+
+@media (max-width: 450px) {
+  .friend {
+    padding: 4px 0;
+    column-gap: 7px;
+  }
+
+  .friend_item_avatar_container {
+    width: 60px;
+    height: 60px;
+  }
+  .friend_item_avatar {
+    width: 60px;
+    height: 60px;
+  }
+  .friend_item_name {
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+
 }
 </style>
