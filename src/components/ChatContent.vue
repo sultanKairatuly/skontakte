@@ -53,7 +53,7 @@ watch(
   }
 );
 
-setInterval(() => {
+const interval = setInterval(() => {
   authStore.refreshChat();
 }, 10000);
 
@@ -109,6 +109,10 @@ function startSearching() {
   searching.value = true;
   findMessages(searchText.value);
 }
+
+onUnmounted(() => {
+  clearInterval(interval);
+});
 </script>
 
 <style scoped>
